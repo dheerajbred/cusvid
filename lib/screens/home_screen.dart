@@ -344,7 +344,7 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                Padding(
-                 padding: const EdgeInsets.only(top: 17.0),
+                 padding: const EdgeInsets.only(top: 29.0),
                  child: MaterialDesktopVolumeButton(
                    volumeHighIcon: Icon(Icons.volume_up_rounded),
                    volumeLowIcon: Icon(Icons.volume_down_rounded),
