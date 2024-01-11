@@ -17,6 +17,49 @@ import 'package:media_kit_video/media_kit_video.dart';
 import 'package:video_cast/video_cast.dart';
 
 class HomeController extends GetxController {
+  Future<void> onInit() async {
+    super.onInit();
+
+    if(mediaInputValue!=null){
+      if(mediaInputValue!.type==MediaType.chooseVideo){
+        videoSource.value = mediaInputValue!.file!.files.single.path ?? "";
+
+        player.stream.position.listen((event) {
+          player.setRate(playbackSpeed.value);
+        });
+
+        player.open(
+          Media(
+            videoSource.value,
+            httpHeaders: {
+              'Foo': 'Bar',
+              'Accept': '*/*',
+              'Range': 'bytes=0-',
+            },
+          ),
+        );
+
+        if (isSubtitleEnabled.value == true) {
+           player.setSubtitleTrack(SubtitleTrack.auto());
+        } else {
+           player.setSubtitleTrack(SubtitleTrack.no());
+        }
+
+      }
+      else{
+        VideoClass video = VideoClass(
+          videoURL: mediaInputValue!.videoUrl!,
+          qualities: mediaInputValue!.qualityUrl ?? [],
+          subtitle: mediaInputValue!.subtitleUrl??"",
+        );
+        playVideo(video);
+        update();
+      }
+    }
+
+  }
+  HomeController(this.mediaInputValue);
+final MediaInputValue? mediaInputValue;
   final Player player = Player();
    RxBool hello = true.obs;
   late VideoController videoPlayerController = VideoController(
@@ -45,10 +88,7 @@ class HomeController extends GetxController {
 
 
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
+
 
   @override
   onClose() async {
@@ -56,6 +96,10 @@ class HomeController extends GetxController {
 
     super.onClose();
   }
+
+
+
+
 
   ///Functionality For Pick Video From Storage
   Future<void> pickVideo() async {
