@@ -93,7 +93,7 @@ class HomeScreen extends StatelessWidget {
                   iconSize: 24.0,
                   iconColor: Colors.white,
                 ),
-                MaterialCustomButton(
+                mediaInput!=null&&mediaInput!.extraWidget!=null?mediaInput!.extraWidget!: MaterialCustomButton(
                   onPressed: controller.qualitySelector,
                   icon: const ImageIcon(AssetImage("assets/setting.png")),
                   iconSize: 24.0,
@@ -487,15 +487,19 @@ Widget MyCustomPlayerWidget(MediaInputValue mediaInputValue){
 class MediaInputValue {
   final MediaType type;
   final String? videoUrl;
-  final String? subtitleUrl;
+  final List<String>? subtitleUrl;
   final int? skipDuration;
   final int? nextDuration;
   final bool showSkipNext;
+  final bool? extraWidgetEnabled;
+  final Widget? extraWidget;
   final List<QualityClass>? qualityUrl;
   final FilePickerResult? file;
   MediaInputValue({
     required this.type,
     this.videoUrl,
+    this.extraWidget,
+    required this.extraWidgetEnabled,
     required this.showSkipNext,
     this.subtitleUrl,
     this.nextDuration,

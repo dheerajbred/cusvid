@@ -50,7 +50,7 @@ class HomeController extends GetxController {
         VideoClass video = VideoClass(
           videoURL: mediaInputValue!.videoUrl!,
           qualities: mediaInputValue!.qualityUrl ?? [],
-          subtitle: mediaInputValue!.subtitleUrl??"",
+          subtitle: mediaInputValue!.subtitleUrl??[],
         );
         playVideo(video);
         update();
@@ -169,7 +169,7 @@ final MediaInputValue? mediaInputValue;
   void playVideoFromDirectLink() {
     VideoClass video = VideoClass(
       videoURL: testVideoLink,
-      subtitle: testSubtitleLink,
+      subtitle: [testSubtitleLink],
     );
     playVideo(video);
     update();
@@ -183,7 +183,7 @@ final MediaInputValue? mediaInputValue;
         QualityClass(name: "480x270", link: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"),
         QualityClass(name: "1280x720", link: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4"),
       ],
-      subtitle: "https://www.capsubservices.com/assets/downloads/subtitle/01hour/SubRip%2001%20Hour.srt",
+      subtitle: ["https://www.capsubservices.com/assets/downloads/subtitle/01hour/SubRip%2001%20Hour.srt"],
     );
     playVideo(video);
     update();
@@ -241,8 +241,8 @@ final MediaInputValue? mediaInputValue;
       ),
     );
 
-    if (isSubtitleEnabled.value == true && video.subtitle != null && video.subtitle!.trim().isNotEmpty) {
-      player.setSubtitleTrack(SubtitleTrack.uri(video.subtitle!, language: "en"));
+    if (isSubtitleEnabled.value == true && video.subtitle != null && video.subtitle![0].trim().isNotEmpty) {
+      player.setSubtitleTrack(SubtitleTrack.uri(video.subtitle![0], language: "en"));
     } else {
       player.setSubtitleTrack(SubtitleTrack.no());
     }
