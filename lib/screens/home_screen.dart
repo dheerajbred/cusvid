@@ -158,7 +158,7 @@ class HomeScreen extends StatelessWidget {
                   builder: (context, position) {
                     //  log("${controller.player.state.duration.inSeconds} ", name: "Duration");
 
-                    if (a<=30) {
+                    if ((a<= (mediaInput==null?30:mediaInput!.skipDuration==null?30:mediaInput!.skipDuration!))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.showSkipNext))) {
 
                       return GestureDetector(
                         onTap: (){
@@ -182,9 +182,10 @@ class HomeScreen extends StatelessWidget {
                         icon: const Icon(Icons.skip_next_sharp),
                         label: const Text("Skip"),
                       );
-                    } else
+                    }
+                    else
                     if (
-                    (controller.player.state.duration.inSeconds - a).abs()<= 50)
+                    ((controller.player.state.duration.inSeconds - a).abs()<= (mediaInput==null?50:mediaInput!.nextDuration==null?50:mediaInput!.nextDuration!))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.showSkipNext)))
                     {
                       return  GestureDetector(
                         onTap: (){
@@ -218,6 +219,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                       );
                     }
+
                   },
                 ),
                 const SizedBox(width: 5),
@@ -364,7 +366,7 @@ class HomeScreen extends StatelessWidget {
                   builder: (context, position) {
                     //  log("${controller.player.state.duration.inSeconds} ", name: "Duration");
 
-                    if (a<=30) {
+                    if (a<=(mediaInput==null?30:mediaInput!.skipDuration==null?30:mediaInput!.skipDuration!)) {
 
                       return GestureDetector(
                         onTap: (){
@@ -390,7 +392,7 @@ class HomeScreen extends StatelessWidget {
                       );
                     } else
                     if (
-                    (controller.player.state.duration.inSeconds - a).abs()<= 50)
+                    (controller.player.state.duration.inSeconds - a).abs()<= (mediaInput==null?50:mediaInput!.nextDuration==null?50:mediaInput!.nextDuration!))
                     {
                       return  GestureDetector(
                         onTap: (){
@@ -486,12 +488,18 @@ class MediaInputValue {
   final MediaType type;
   final String? videoUrl;
   final String? subtitleUrl;
+  final int? skipDuration;
+  final int? nextDuration;
+  final bool showSkipNext;
   final List<QualityClass>? qualityUrl;
   final FilePickerResult? file;
   MediaInputValue({
     required this.type,
     this.videoUrl,
+    required this.showSkipNext,
     this.subtitleUrl,
+    this.nextDuration,
+    this.skipDuration,
     this.qualityUrl,
     this.file
   }): assert(type != MediaType.playFromLink || videoUrl != null, 'Video URL is required for Video with link'),assert(type != MediaType.chooseVideo || file != null, 'Video URL is required for Video with link');

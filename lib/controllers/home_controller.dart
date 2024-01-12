@@ -249,7 +249,6 @@ final MediaInputValue? mediaInputValue;
 
     update();
   }
-
   ///Functionality For Play Playlist
   Future<void> pickMultipleVideos() async {
     List<PlatformFile> pickedFiles = [];
