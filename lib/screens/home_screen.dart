@@ -189,8 +189,9 @@ class HomeScreen extends StatelessWidget {
                     {
                       return  GestureDetector(
                         onTap: (){
+                          mediaInput!=null&&mediaInput!.userProvidedFunction !=null?mediaInput!.userProvidedFunction: controller.onNext;
                           debugPrint("Hello world i am here");
-                          controller.onNext;
+
                         },
                         child:  Stack(
                           children: [
@@ -495,9 +496,11 @@ class MediaInputValue {
   final Widget? extraWidget;
   final List<QualityClass>? qualityUrl;
   final FilePickerResult? file;
+  final void Function()? userProvidedFunction;
   MediaInputValue({
     required this.type,
     this.videoUrl,
+    this.userProvidedFunction,
     this.extraWidget,
     required this.extraWidgetEnabled,
     required this.showSkipNext,
