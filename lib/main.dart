@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.dark(
         useMaterial3: true,
       ),
-      home: MyCustomPlayerWidget(MediaInputValue(type: MediaType.playFromLink,videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",subtitleUrl: ["https://www.capsubservices.com/assets/downloads/subtitle/01hour/SubRip%2001%20Hour.srt"], showSkipNext: false, extraWidgetEnabled: false),),
+      home: MyCustomPlayerWidget(MediaInputValue(type: MediaType.playFromLink,videoUrl: "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",subtitleUrl: ["https://www.capsubservices.com/assets/downloads/subtitle/01hour/SubRip%2001%20Hour.srt"], nextButtonEnabled: false, extraWidgetEnabled: false, skipButtonEnabled: true),),
     );
   }
 }

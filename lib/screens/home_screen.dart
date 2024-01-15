@@ -157,8 +157,9 @@ class HomeScreen extends StatelessWidget {
                   stream: controller.player.stream.position,
                   builder: (context, position) {
                     //  log("${controller.player.state.duration.inSeconds} ", name: "Duration");
-
-                    if ((a<= (mediaInput==null?30:mediaInput!.skipDuration==null?30:mediaInput!.skipDuration!))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.showSkipNext))) {
+                    int x = mediaInput==null?0:mediaInput!.skipButtonShowOn==null?0:mediaInput!.skipButtonShowOn!;
+                    int y = mediaInput==null?0:mediaInput!.nextButtonShowOn==null?0:mediaInput!.nextButtonDuration!;
+                    if ((a<= (mediaInput==null?30+x:mediaInput!.skipButtonDuration==null?30+x:(mediaInput!.skipButtonDuration!+x)))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.skipButtonEnabled))&&(a>=x)) {
 
                       return GestureDetector(
                         onTap: (){
@@ -183,9 +184,10 @@ class HomeScreen extends StatelessWidget {
                         label: const Text("Skip"),
                       );
                     }
+
                     else
                     if (
-                    ((controller.player.state.duration.inSeconds - a).abs()<= (mediaInput==null?50:mediaInput!.nextDuration==null?50:mediaInput!.nextDuration!))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.showSkipNext)))
+                    ((controller.player.state.duration.inSeconds - a).abs() <= (mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonShowOn!))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.nextButtonEnabled)))
                     {
                       return  GestureDetector(
                         onTap: (){
@@ -220,7 +222,6 @@ class HomeScreen extends StatelessWidget {
                         ),
                       );
                     }
-
                   },
                 ),
                 const SizedBox(width: 5),
@@ -366,8 +367,9 @@ class HomeScreen extends StatelessWidget {
                   stream: controller.player.stream.position,
                   builder: (context, position) {
                     //  log("${controller.player.state.duration.inSeconds} ", name: "Duration");
-
-                    if (a<=(mediaInput==null?30:mediaInput!.skipDuration==null?30:mediaInput!.skipDuration!)) {
+          int x = mediaInput==null?0:mediaInput!.skipButtonShowOn==null?0:mediaInput!.skipButtonShowOn!;
+          int y = mediaInput==null?0:mediaInput!.nextButtonShowOn==null?0:mediaInput!.nextButtonDuration!;
+                    if ((a<= (mediaInput==null?30+x:mediaInput!.skipButtonDuration==null?30+x:(mediaInput!.skipButtonDuration!+x)))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.skipButtonEnabled))&&(a>=x)) {
 
                       return GestureDetector(
                         onTap: (){
@@ -391,14 +393,17 @@ class HomeScreen extends StatelessWidget {
                         icon: const Icon(Icons.skip_next_sharp),
                         label: const Text("Skip"),
                       );
-                    } else
+                    }
+
+                    else
                     if (
-                    (controller.player.state.duration.inSeconds - a).abs()<= (mediaInput==null?50:mediaInput!.nextDuration==null?50:mediaInput!.nextDuration!))
+                    ((controller.player.state.duration.inSeconds - a).abs() <= (mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonShowOn!))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.nextButtonEnabled)))
                     {
                       return  GestureDetector(
                         onTap: (){
+                          mediaInput!=null&&mediaInput!.userProvidedFunction !=null?mediaInput!.userProvidedFunction: controller.onNext;
                           debugPrint("Hello world i am here");
-                          controller.onNext;
+
                         },
                         child:  Stack(
                           children: [
@@ -489,9 +494,15 @@ class MediaInputValue {
   final MediaType type;
   final String? videoUrl;
   final List<String>? subtitleUrl;
-  final int? skipDuration;
-  final int? nextDuration;
-  final bool showSkipNext;
+  final bool skipButtonEnabled;
+  final int? skipButtonShowOn;
+  final int? skipButtonSkipTo;
+  final int? skipButtonDuration;
+
+  final int? nextButtonDuration;
+  // nextButtonShowOn -> time in seconds before the video ends..
+  final int? nextButtonShowOn;
+  final bool nextButtonEnabled;
   final bool? extraWidgetEnabled;
   final Widget? extraWidget;
   final List<QualityClass>? qualityUrl;
@@ -499,14 +510,19 @@ class MediaInputValue {
   final void Function()? userProvidedFunction;
   MediaInputValue({
     required this.type,
+    this.nextButtonShowOn,
+    this.skipButtonSkipTo,
+    this.skipButtonShowOn,
+    required this.skipButtonEnabled,
     this.videoUrl,
     this.userProvidedFunction,
     this.extraWidget,
     required this.extraWidgetEnabled,
-    required this.showSkipNext,
+    required this.nextButtonEnabled,
+
     this.subtitleUrl,
-    this.nextDuration,
-    this.skipDuration,
+    this.nextButtonDuration,
+    this.skipButtonDuration,
     this.qualityUrl,
     this.file
   }): assert(type != MediaType.playFromLink || videoUrl != null, 'Video URL is required for Video with link'),assert(type != MediaType.chooseVideo || file != null, 'Video URL is required for Video with link');
