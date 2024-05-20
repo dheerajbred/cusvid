@@ -24,8 +24,11 @@ class HomeScreen extends StatelessWidget {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
    var a = 0;
    final MediaInputValue? mediaInput;
+
   @override
   Widget build(BuildContext context) {
+    int x = mediaInput==null?0:mediaInput!.skipButtonShowOn==null?0:mediaInput!.skipButtonShowOn!;
+    int y = mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonDuration!;
     if(mediaInput!=null){
       debugPrint("value is of ${mediaInput!.videoUrl}");
     }
@@ -157,8 +160,7 @@ class HomeScreen extends StatelessWidget {
                   stream: controller.player.stream.position,
                   builder: (context, position) {
                     //  log("${controller.player.state.duration.inSeconds} ", name: "Duration");
-                    int x = mediaInput==null?0:mediaInput!.skipButtonShowOn==null?0:mediaInput!.skipButtonShowOn!;
-                    int y = mediaInput==null?0:mediaInput!.nextButtonShowOn==null?0:mediaInput!.nextButtonDuration!;
+
                     if ((a<= (mediaInput==null?30+x:mediaInput!.skipButtonDuration==null?30+x:(mediaInput!.skipButtonDuration!+x)))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.skipButtonEnabled))&&(a>=x)) {
 
                       return GestureDetector(
@@ -187,7 +189,7 @@ class HomeScreen extends StatelessWidget {
 
                     else
                     if (
-                    ((controller.player.state.duration.inSeconds - a).abs() <= (mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonShowOn!))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.nextButtonEnabled)))
+                    ((controller.player.state.duration.inSeconds - a).abs() <= (mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonShowOn!))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.nextButtonEnabled))&&((controller.player.state.duration.inSeconds - a).abs()>=((mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonShowOn!)-y)))
                     {
                       return  GestureDetector(
                         onTap: (){
@@ -367,8 +369,7 @@ class HomeScreen extends StatelessWidget {
                   stream: controller.player.stream.position,
                   builder: (context, position) {
                     //  log("${controller.player.state.duration.inSeconds} ", name: "Duration");
-          int x = mediaInput==null?0:mediaInput!.skipButtonShowOn==null?0:mediaInput!.skipButtonShowOn!;
-          int y = mediaInput==null?0:mediaInput!.nextButtonShowOn==null?0:mediaInput!.nextButtonDuration!;
+
                     if ((a<= (mediaInput==null?30+x:mediaInput!.skipButtonDuration==null?30+x:(mediaInput!.skipButtonDuration!+x)))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.skipButtonEnabled))&&(a>=x)) {
 
                       return GestureDetector(
@@ -397,7 +398,7 @@ class HomeScreen extends StatelessWidget {
 
                     else
                     if (
-                    ((controller.player.state.duration.inSeconds - a).abs() <= (mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonShowOn!))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.nextButtonEnabled)))
+                    ((controller.player.state.duration.inSeconds - a).abs() <= (mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonShowOn!))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.nextButtonEnabled))&&((controller.player.state.duration.inSeconds - a).abs()>=((mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonShowOn!)-y)))
                     {
                       return  GestureDetector(
                         onTap: (){
