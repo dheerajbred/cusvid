@@ -19,20 +19,26 @@ import 'package:video_cast/video_cast.dart';
 import '../controllers/home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
-
-   HomeScreen({super.key,this.mediaInput});
+  HomeScreen({super.key, this.mediaInput});
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
-   var a = 0;
-   final MediaInputValue? mediaInput;
+  var a = 0;
+  final MediaInputValue? mediaInput;
 
   @override
   Widget build(BuildContext context) {
-    int x = mediaInput==null?0:mediaInput!.skipButtonShowOn==null?0:mediaInput!.skipButtonShowOn!;
-    int y = mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonDuration!;
-    if(mediaInput!=null){
+    int x = mediaInput == null
+        ? 0
+        : mediaInput!.skipButtonShowOn == null
+            ? 0
+            : mediaInput!.skipButtonShowOn!;
+    int y = mediaInput == null
+        ? 50
+        : mediaInput!.nextButtonShowOn == null
+            ? 50
+            : mediaInput!.nextButtonDuration!;
+    if (mediaInput != null) {
       debugPrint("value is of ${mediaInput!.videoUrl}");
     }
-
 
     return GetBuilder<HomeController>(
       init: HomeController(mediaInput),
@@ -49,7 +55,8 @@ class HomeScreen extends StatelessWidget {
               shiftSubtitlesOnControlsVisibilityChange: false,
               volumeGesture: true,
               seekOnDoubleTap: true,
-              controlsHoverDuration: const Duration(seconds: 5,milliseconds: 400),
+              controlsHoverDuration:
+                  const Duration(seconds: 5, milliseconds: 400),
               buttonBarButtonSize: 24.0,
               buttonBarButtonColor: Colors.white,
               topButtonBar: [
@@ -61,10 +68,9 @@ class HomeScreen extends StatelessWidget {
                 const SizedBox(height: 8),
                 const Text("Full"),
                 const Spacer(),
-
                 MaterialCustomButton(
                   onPressed: controller.speedSelector,
-                  icon:  const ImageIcon(AssetImage("assets/speedometer.png")),
+                  icon: const ImageIcon(AssetImage("assets/speedometer.png")),
                   iconSize: 24.0,
                 ),
                 MaterialCustomButton(
@@ -77,13 +83,15 @@ class HomeScreen extends StatelessWidget {
                   onButtonCreated: controller.createChromeCast,
                   onSessionStarted: () {
                     controller.chromeCast?.loadMedia(
-                      url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                      url:
+                          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
                       position: 30000,
                       autoplay: true,
                       title: 'Spider-Man: No Way Home',
                       description:
-                      'Peter Parker is unmasked and no longer able to separate his normal life from the high-stakes of being a super-hero. When he asks for help from Doctor Strange the stakes become even more dangerous, forcing him to discover what it truly means to be Spider-Man.',
-                      image: 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/marvsmposterbk_intdesign.jpg',
+                          'Peter Parker is unmasked and no longer able to separate his normal life from the high-stakes of being a super-hero. When he asks for help from Doctor Strange the stakes become even more dangerous, forcing him to discover what it truly means to be Spider-Man.',
+                      image:
+                          'https://terrigen-cdn-dev.marvel.com/content/prod/1x/marvsmposterbk_intdesign.jpg',
                       type: ChromeCastMediaType.movie,
                     );
                   },
@@ -96,64 +104,74 @@ class HomeScreen extends StatelessWidget {
                   iconSize: 24.0,
                   iconColor: Colors.white,
                 ),
-                mediaInput!=null&&mediaInput!.extraWidget!=null?mediaInput!.extraWidget!: MaterialCustomButton(
-                  onPressed: controller.qualitySelector,
-                  icon: const ImageIcon(AssetImage("assets/setting.png")),
-                  iconSize: 24.0,
-                  iconColor: Colors.white,
-                ),
+                mediaInput != null && mediaInput!.extraWidget != null
+                    ? mediaInput!.extraWidget!
+                    : MaterialCustomButton(
+                        onPressed: controller.qualitySelector,
+                        icon: const ImageIcon(AssetImage("assets/setting.png")),
+                        iconSize: 24.0,
+                        iconColor: Colors.white,
+                      ),
               ],
               bottomButtonBar: [
                 StreamBuilder<Duration>(
                   stream: controller.player.stream.position,
-
                   builder: (context, position) {
-
-                    if(position.hasData&&position.data!=null){
+                    if (position.hasData && position.data != null) {
                       a = position.data!.inSeconds;
                     }
                     // log("${controller.player.state.duration.inSeconds} ", name: "Duration");
                     return Row(
                       children: [
                         MaterialCustomButton(
-                          onPressed: (){
-                            debugPrint("position is ${position.data?.inSeconds}");
-                            if(position.hasData&&position.data!=null){
-                              controller.player.seek(Duration(seconds: -((controller.player.state.duration.inSeconds-(position.data!.inSeconds - 10)).abs()) ));
+                          onPressed: () {
+                            debugPrint(
+                                "position is ${position.data?.inSeconds}");
+                            if (position.hasData && position.data != null) {
+                              controller.player.seek(Duration(
+                                  seconds: -((controller
+                                              .player.state.duration.inSeconds -
+                                          (position.data!.inSeconds - 10))
+                                      .abs())));
+                            } else {
+                              controller.player.seek(Duration(
+                                  seconds: -((controller
+                                              .player.state.duration.inSeconds -
+                                          (a - 10))
+                                      .abs())));
+                              a = min(a - 10, 0);
                             }
-                            else{
-                              controller.player.seek(Duration(seconds: -((controller.player.state.duration.inSeconds-(a - 10)).abs()) ));
-                              a = min(a-10,0);
-                            }
-
-
                           },
                           icon: const Icon(Icons.replay_10_outlined),
                           iconSize: 24.0,
                         ),
                         MaterialCustomButton(
                           onPressed: () {
-                            if(position.hasData&&position.data!=null){
-                              controller.player.seek(Duration(seconds: -((controller.player.state.duration.inSeconds-(position.data!.inSeconds + 10)).abs()) ));
+                            if (position.hasData && position.data != null) {
+                              controller.player.seek(Duration(
+                                  seconds: -((controller
+                                              .player.state.duration.inSeconds -
+                                          (position.data!.inSeconds + 10))
+                                      .abs())));
+                            } else {
+                              controller.player.seek(Duration(
+                                  seconds: -((controller
+                                              .player.state.duration.inSeconds -
+                                          (a + 10))
+                                      .abs())));
+                              a += 10;
                             }
-                            else{
-                              controller.player.seek(Duration(seconds: -((controller.player.state.duration.inSeconds-(a + 10)).abs()) ));
-                              a+=10;
-                            }
-
                           },
                           icon: const Icon(Icons.forward_10_outlined),
                           iconSize: 24.0,
                         ),
                       ],
                     );
-
                   },
                 ),
-                MaterialDesktopVolumeButton(
+                const MaterialDesktopVolumeButton(
                   volumeHighIcon: Icon(Icons.volume_up_rounded),
                   volumeLowIcon: Icon(Icons.volume_down_rounded),
-
                 ),
                 const Spacer(),
                 StreamBuilder<Duration>(
@@ -161,16 +179,27 @@ class HomeScreen extends StatelessWidget {
                   builder: (context, position) {
                     //  log("${controller.player.state.duration.inSeconds} ", name: "Duration");
 
-                    if ((a<= (mediaInput==null?30+x:mediaInput!.skipButtonDuration==null?30+x:(mediaInput!.skipButtonDuration!+x)))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.skipButtonEnabled))&&(a>=x)) {
-
+                    if ((a <=
+                            (mediaInput == null
+                                ? 30 + x
+                                : mediaInput!.skipButtonDuration == null
+                                    ? 30 + x
+                                    : (mediaInput!.skipButtonDuration! + x))) &&
+                        (mediaInput == null ||
+                            (mediaInput != null &&
+                                mediaInput!.skipButtonEnabled)) &&
+                        (a >= x)) {
                       return GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           debugPrint("Hello world i am here");
                           controller.onSkip();
                         },
-                        child:  Stack(
+                        child: Stack(
                           children: [
-                            AnimationContainer(text: 'SKIP', onPressedController: () {  },),
+                            AnimationContainer(
+                              text: 'SKIP',
+                              onPressedController: () {},
+                            ),
                             Container(
                               width: 120,
                               height: 60,
@@ -180,27 +209,38 @@ class HomeScreen extends StatelessWidget {
                         ),
                         //
                       );
-                      ElevatedButton.icon(
-                        onPressed: controller.onSkip,
-                        icon: const Icon(Icons.skip_next_sharp),
-                        label: const Text("Skip"),
-                      );
-                    }
-
-                    else
-                    if (
-                    ((controller.player.state.duration.inSeconds - a).abs() <= (mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonShowOn!))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.nextButtonEnabled))&&((controller.player.state.duration.inSeconds - a).abs()>=((mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonShowOn!)-y)))
-                    {
-                      return  GestureDetector(
-                        onTap: (){
-                          mediaInput!=null&&mediaInput!.userProvidedFunction !=null?mediaInput!.userProvidedFunction: controller.onNext;
+                    } else if (((controller.player.state.duration.inSeconds - a)
+                                .abs() <=
+                            (mediaInput == null
+                                ? 50
+                                : mediaInput!.nextButtonShowOn == null
+                                    ? 50
+                                    : mediaInput!.nextButtonShowOn!)) &&
+                        (mediaInput == null ||
+                            (mediaInput != null &&
+                                mediaInput!.nextButtonEnabled)) &&
+                        ((controller.player.state.duration.inSeconds - a)
+                                .abs() >=
+                            ((mediaInput == null
+                                    ? 50
+                                    : mediaInput!.nextButtonShowOn == null
+                                        ? 50
+                                        : mediaInput!.nextButtonShowOn!) -
+                                y))) {
+                      return GestureDetector(
+                        onTap: () {
+                          mediaInput != null &&
+                                  mediaInput!.userProvidedFunction != null
+                              ? mediaInput!.userProvidedFunction
+                              : controller.onNext;
                           debugPrint("Hello world i am here");
-
                         },
-                        child:  Stack(
+                        child: Stack(
                           children: [
-
-                            AnimationContainer(text: 'NEXT EPISODE', onPressedController: () {  },),
+                            AnimationContainer(
+                              text: 'NEXT EPISODE',
+                              onPressedController: () {},
+                            ),
                             Container(
                               width: 120,
                               height: 60,
@@ -215,8 +255,7 @@ class HomeScreen extends StatelessWidget {
                         icon: const Icon(Icons.navigate_next),
                         label: const Text("Next Episode"),
                       );
-                    }
-                    else {
+                    } else {
                       return const Padding(
                         padding: EdgeInsets.only(bottom: 4),
                         child: MaterialPositionIndicator(
@@ -230,12 +269,13 @@ class HomeScreen extends StatelessWidget {
                 const MaterialFullscreenButton(iconSize: 24),
               ],
             ),
-            fullscreen:  MaterialVideoControlsThemeData(
-              seekBarMargin: const EdgeInsets.only(bottom: 50,right: 180),
+            fullscreen: MaterialVideoControlsThemeData(
+              seekBarMargin: const EdgeInsets.only(bottom: 50, right: 180),
               seekBarThumbSize: 20,
-              bottomButtonBarMargin: EdgeInsets.only(bottom: 20),
+              bottomButtonBarMargin: const EdgeInsets.only(bottom: 20),
               automaticallyImplySkipNextButton: false,
-              controlsHoverDuration: const Duration(seconds: 5,milliseconds: 400),
+              controlsHoverDuration:
+                  const Duration(seconds: 5, milliseconds: 400),
               automaticallyImplySkipPreviousButton: false,
               shiftSubtitlesOnControlsVisibilityChange: true,
               volumeGesture: true,
@@ -243,10 +283,9 @@ class HomeScreen extends StatelessWidget {
               seekOnDoubleTap: true,
               buttonBarButtonSize: 24.0,
               buttonBarButtonColor: Colors.white,
-
               topButtonBar: [
-                MaterialFullscreenButton(
-                  icon: const Icon(Icons.arrow_back),
+                const MaterialFullscreenButton(
+                  icon: Icon(Icons.arrow_back),
                   iconSize: 24.0,
                 ),
                 const SizedBox(height: 8),
@@ -256,10 +295,10 @@ class HomeScreen extends StatelessWidget {
 
                 //TODO: Do Necessary Changes
                 MaterialCustomButton(
-                  onPressed: (){
+                  onPressed: () {
                     controller.speedSelector2();
                   },
-                  icon:  const ImageIcon(AssetImage("assets/speedometer.png")),
+                  icon: const ImageIcon(AssetImage("assets/speedometer.png")),
                   iconSize: 24.0,
                 ),
                 //TODO: Do Necessary Changes
@@ -273,19 +312,22 @@ class HomeScreen extends StatelessWidget {
                   onButtonCreated: controller.createChromeCast,
                   onSessionStarted: () {
                     controller.chromeCast?.loadMedia(
-                      url: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+                      url:
+                          'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
                       position: 30000,
                       autoplay: true,
                       title: 'Spider-Man: No Way Home',
                       description:
-                      'Peter Parker is unmasked and no longer able to separate his normal life from the high-stakes of being a super-hero. When he asks for help from Doctor Strange the stakes become even more dangerous, forcing him to discover what it truly means to be Spider-Man.',
-                      image: 'https://terrigen-cdn-dev.marvel.com/content/prod/1x/marvsmposterbk_intdesign.jpg',
+                          'Peter Parker is unmasked and no longer able to separate his normal life from the high-stakes of being a super-hero. When he asks for help from Doctor Strange the stakes become even more dangerous, forcing him to discover what it truly means to be Spider-Man.',
+                      image:
+                          'https://terrigen-cdn-dev.marvel.com/content/prod/1x/marvsmposterbk_intdesign.jpg',
                       type: ChromeCastMediaType.movie,
                     );
                   },
                 ),
                 //TODO: Episodes
-                MaterialFullscreenButton(
+                MaterialCustomButton(
+                  onPressed: controller.chapterselect2,
                   icon: const ImageIcon(AssetImage("assets/episodes.png")),
                   iconSize: 24.0,
                   iconColor: Colors.white,
@@ -298,53 +340,59 @@ class HomeScreen extends StatelessWidget {
                 ),
               ],
               bottomButtonBar: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 30.0),
-                  child: const MaterialPlayOrPauseButton(
-
-                  ),
+                const Padding(
+                  padding: EdgeInsets.only(top: 30.0),
+                  child: MaterialPlayOrPauseButton(),
                 ),
-
-
                 StreamBuilder<Duration>(
                   stream: controller.player.stream.position,
-
                   builder: (context, position) {
-
-                    if(position.hasData&&position.data!=null){
+                    if (position.hasData && position.data != null) {
                       a = position.data!.inSeconds;
                     }
                     // log("${controller.player.state.duration.inSeconds} ", name: "Duration");
                     return Padding(
-                      padding: const EdgeInsets.only(top:37.0),
+                      padding: const EdgeInsets.only(top: 37.0),
                       child: Row(
                         children: [
                           MaterialCustomButton(
-                            onPressed: (){
-                              debugPrint("position is ${position.data?.inSeconds}");
-                              if(position.hasData&&position.data!=null){
-                                controller.player.seek(Duration(seconds: -((controller.player.state.duration.inSeconds-(position.data!.inSeconds - 10)).abs()) ));
+                            onPressed: () {
+                              debugPrint(
+                                  "position is ${position.data?.inSeconds}");
+                              if (position.hasData && position.data != null) {
+                                controller.player.seek(Duration(
+                                    seconds: -((controller.player.state.duration
+                                                .inSeconds -
+                                            (position.data!.inSeconds - 10))
+                                        .abs())));
+                              } else {
+                                controller.player.seek(Duration(
+                                    seconds: -((controller.player.state.duration
+                                                .inSeconds -
+                                            (a - 10))
+                                        .abs())));
+                                a = min(a - 10, 0);
                               }
-                              else{
-                                controller.player.seek(Duration(seconds: -((controller.player.state.duration.inSeconds-(a - 10)).abs()) ));
-                                a = min(a-10,0);
-                              }
-
-
                             },
                             icon: const Icon(Icons.replay_10_outlined),
                             iconSize: 24.0,
                           ),
                           MaterialCustomButton(
                             onPressed: () {
-                              if(position.hasData&&position.data!=null){
-                                controller.player.seek(Duration(seconds: -((controller.player.state.duration.inSeconds-(position.data!.inSeconds + 10)).abs()) ));
+                              if (position.hasData && position.data != null) {
+                                controller.player.seek(Duration(
+                                    seconds: -((controller.player.state.duration
+                                                .inSeconds -
+                                            (position.data!.inSeconds + 10))
+                                        .abs())));
+                              } else {
+                                controller.player.seek(Duration(
+                                    seconds: -((controller.player.state.duration
+                                                .inSeconds -
+                                            (a + 10))
+                                        .abs())));
+                                a += 10;
                               }
-                              else{
-                                controller.player.seek(Duration(seconds: -((controller.player.state.duration.inSeconds-(a + 10)).abs()) ));
-                                a+=10;
-                              }
-
                             },
                             icon: const Icon(Icons.forward_10_outlined),
                             iconSize: 24.0,
@@ -352,16 +400,13 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                     );
-
                   },
                 ),
-
-                Padding(
-                  padding: const EdgeInsets.only(top: 29.0),
+                const Padding(
+                  padding: EdgeInsets.only(top: 29.0),
                   child: MaterialDesktopVolumeButton(
                     volumeHighIcon: Icon(Icons.volume_up_rounded),
                     volumeLowIcon: Icon(Icons.volume_down_rounded),
-
                   ),
                 ),
                 const Spacer(),
@@ -370,16 +415,27 @@ class HomeScreen extends StatelessWidget {
                   builder: (context, position) {
                     //  log("${controller.player.state.duration.inSeconds} ", name: "Duration");
 
-                    if ((a<= (mediaInput==null?30+x:mediaInput!.skipButtonDuration==null?30+x:(mediaInput!.skipButtonDuration!+x)))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.skipButtonEnabled))&&(a>=x)) {
-
+                    if ((a <=
+                            (mediaInput == null
+                                ? 30 + x
+                                : mediaInput!.skipButtonDuration == null
+                                    ? 30 + x
+                                    : (mediaInput!.skipButtonDuration! + x))) &&
+                        (mediaInput == null ||
+                            (mediaInput != null &&
+                                mediaInput!.skipButtonEnabled)) &&
+                        (a >= x)) {
                       return GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           debugPrint("Hello world i am here");
                           controller.onSkip();
                         },
-                        child:  Stack(
+                        child: Stack(
                           children: [
-                            AnimationContainer(text: 'SKIP', onPressedController: () {  },),
+                            AnimationContainer(
+                              text: 'SKIP',
+                              onPressedController: () {},
+                            ),
                             Container(
                               width: 120,
                               height: 60,
@@ -394,22 +450,38 @@ class HomeScreen extends StatelessWidget {
                         icon: const Icon(Icons.skip_next_sharp),
                         label: const Text("Skip"),
                       );
-                    }
-
-                    else
-                    if (
-                    ((controller.player.state.duration.inSeconds - a).abs() <= (mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonShowOn!))&&  (mediaInput==null||(mediaInput!=null&&mediaInput!.nextButtonEnabled))&&((controller.player.state.duration.inSeconds - a).abs()>=((mediaInput==null?50:mediaInput!.nextButtonShowOn==null?50:mediaInput!.nextButtonShowOn!)-y)))
-                    {
-                      return  GestureDetector(
-                        onTap: (){
-                          mediaInput!=null&&mediaInput!.userProvidedFunction !=null?mediaInput!.userProvidedFunction: controller.onNext;
+                    } else if (((controller.player.state.duration.inSeconds - a)
+                                .abs() <=
+                            (mediaInput == null
+                                ? 50
+                                : mediaInput!.nextButtonShowOn == null
+                                    ? 50
+                                    : mediaInput!.nextButtonShowOn!)) &&
+                        (mediaInput == null ||
+                            (mediaInput != null &&
+                                mediaInput!.nextButtonEnabled)) &&
+                        ((controller.player.state.duration.inSeconds - a)
+                                .abs() >=
+                            ((mediaInput == null
+                                    ? 50
+                                    : mediaInput!.nextButtonShowOn == null
+                                        ? 50
+                                        : mediaInput!.nextButtonShowOn!) -
+                                y))) {
+                      return GestureDetector(
+                        onTap: () {
+                          mediaInput != null &&
+                                  mediaInput!.userProvidedFunction != null
+                              ? mediaInput!.userProvidedFunction
+                              : controller.onNext;
                           debugPrint("Hello world i am here");
-
                         },
-                        child:  Stack(
+                        child: Stack(
                           children: [
-
-                            AnimationContainer(text: 'NEXT EPISODE', onPressedController: () {  },),
+                            AnimationContainer(
+                              text: 'NEXT EPISODE',
+                              onPressedController: () {},
+                            ),
                             Container(
                               width: 120,
                               height: 60,
@@ -424,8 +496,7 @@ class HomeScreen extends StatelessWidget {
                         icon: const Icon(Icons.navigate_next),
                         label: const Text("Next Episode"),
                       );
-                    }
-                    else {
+                    } else {
                       return const Padding(
                         padding: EdgeInsets.only(bottom: 4),
                         child: MaterialPositionIndicator(
@@ -435,7 +506,6 @@ class HomeScreen extends StatelessWidget {
                     }
                   },
                 ),
-
                 const SizedBox(width: 5),
                 const MaterialFullscreenButton(iconSize: 24),
               ],
@@ -460,15 +530,13 @@ class HomeScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       padding: EdgeInsets.all(24.0),
                     ),
-
-
                   ),
                 ),
               ),
             ),
           ),
           floatingActionButton: FloatingActionButton(
-            onPressed: (){
+            onPressed: () {
               controller.playVideoFromDirectLinkWithQualities();
             },
           ),
@@ -476,18 +544,14 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
-
-
-
 }
+
 enum MediaType {
   playFromLink,
   chooseVideo,
 }
 
-Widget MyCustomPlayerWidget(MediaInputValue mediaInputValue){
-
+Widget MyCustomPlayerWidget(MediaInputValue mediaInputValue) {
   return HomeScreen(mediaInput: mediaInputValue);
 }
 
@@ -509,22 +573,24 @@ class MediaInputValue {
   final List<QualityClass>? qualityUrl;
   final FilePickerResult? file;
   final void Function()? userProvidedFunction;
-  MediaInputValue({
-    required this.type,
-    this.nextButtonShowOn,
-    this.skipButtonSkipTo,
-    this.skipButtonShowOn,
-    required this.skipButtonEnabled,
-    this.videoUrl,
-    this.userProvidedFunction,
-    this.extraWidget,
-    required this.extraWidgetEnabled,
-    required this.nextButtonEnabled,
-
-    this.subtitleUrl,
-    this.nextButtonDuration,
-    this.skipButtonDuration,
-    this.qualityUrl,
-    this.file
-  }): assert(type != MediaType.playFromLink || videoUrl != null, 'Video URL is required for Video with link'),assert(type != MediaType.chooseVideo || file != null, 'Video URL is required for Video with link');
+  MediaInputValue(
+      {required this.type,
+      this.nextButtonShowOn,
+      this.skipButtonSkipTo,
+      this.skipButtonShowOn,
+      required this.skipButtonEnabled,
+      this.videoUrl,
+      this.userProvidedFunction,
+      this.extraWidget,
+      required this.extraWidgetEnabled,
+      required this.nextButtonEnabled,
+      this.subtitleUrl,
+      this.nextButtonDuration,
+      this.skipButtonDuration,
+      this.qualityUrl,
+      this.file})
+      : assert(type != MediaType.playFromLink || videoUrl != null,
+            'Video URL is required for Video with link'),
+        assert(type != MediaType.chooseVideo || file != null,
+            'Video URL is required for Video with link');
 }
