@@ -119,64 +119,70 @@ class HomeScreen extends StatelessWidget {
                       ),
               ],
               bottomButtonBar: [
-                StreamBuilder<Duration>(
-                  stream: controller.player.stream.position,
-                  builder: (context, position) {
-                    if (position.hasData && position.data != null) {
-                      a = position.data!.inSeconds;
-                    }
-                    // log("${controller.player.state.duration.inSeconds} ", name: "Duration");
-                    return Row(
-                      children: [
-                        MaterialCustomButton(
-                          onPressed: () {
-                            debugPrint(
-                                "position is ${position.data?.inSeconds}");
-                            if (position.hasData && position.data != null) {
-                              controller.player.seek(Duration(
-                                  seconds: -((controller
-                                              .player.state.duration.inSeconds -
-                                          (position.data!.inSeconds - 10))
-                                      .abs())));
-                            } else {
-                              controller.player.seek(Duration(
-                                  seconds: -((controller
-                                              .player.state.duration.inSeconds -
-                                          (a - 10))
-                                      .abs())));
-                              a = min(a - 10, 0);
-                            }
-                          },
-                          icon: const Icon(Icons.replay_10_outlined),
-                          iconSize: 24.0,
-                        ),
-                        MaterialCustomButton(
-                          onPressed: () {
-                            if (position.hasData && position.data != null) {
-                              controller.player.seek(Duration(
-                                  seconds: -((controller
-                                              .player.state.duration.inSeconds -
-                                          (position.data!.inSeconds + 10))
-                                      .abs())));
-                            } else {
-                              controller.player.seek(Duration(
-                                  seconds: -((controller
-                                              .player.state.duration.inSeconds -
-                                          (a + 10))
-                                      .abs())));
-                              a += 10;
-                            }
-                          },
-                          icon: const Icon(Icons.forward_10_outlined),
-                          iconSize: 24.0,
-                        ),
-                      ],
-                    );
-                  },
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0),
+                  child: StreamBuilder<Duration>(
+                    stream: controller.player.stream.position,
+                    builder: (context, position) {
+                      if (position.hasData && position.data != null) {
+                        a = position.data!.inSeconds;
+                      }
+                      // log("${controller.player.state.duration.inSeconds} ", name: "Duration");
+                      return Row(
+                        children: [
+                          MaterialCustomButton(
+                            onPressed: () {
+                              debugPrint(
+                                  "position is ${position.data?.inSeconds}");
+                              if (position.hasData && position.data != null) {
+                                controller.player.seek(Duration(
+                                    seconds: -((controller.player.state.duration
+                                                .inSeconds -
+                                            (position.data!.inSeconds - 10))
+                                        .abs())));
+                              } else {
+                                controller.player.seek(Duration(
+                                    seconds: -((controller.player.state.duration
+                                                .inSeconds -
+                                            (a - 10))
+                                        .abs())));
+                                a = min(a - 10, 0);
+                              }
+                            },
+                            icon: const Icon(Icons.replay_10_outlined),
+                            iconSize: 24.0,
+                          ),
+                          MaterialCustomButton(
+                            onPressed: () {
+                              if (position.hasData && position.data != null) {
+                                controller.player.seek(Duration(
+                                    seconds: -((controller.player.state.duration
+                                                .inSeconds -
+                                            (position.data!.inSeconds + 10))
+                                        .abs())));
+                              } else {
+                                controller.player.seek(Duration(
+                                    seconds: -((controller.player.state.duration
+                                                .inSeconds -
+                                            (a + 10))
+                                        .abs())));
+                                a += 10;
+                              }
+                            },
+                            icon: const Icon(Icons.forward_10_outlined),
+                            iconSize: 24.0,
+                          ),
+                        ],
+                      );
+                    },
+                  ),
                 ),
-                const MaterialDesktopVolumeButton(
-                  volumeHighIcon: Icon(Icons.volume_up_rounded),
-                  volumeLowIcon: Icon(Icons.volume_down_rounded),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 5.0),
+                  child: const MaterialDesktopVolumeButton(
+                    volumeHighIcon: Icon(Icons.volume_up_rounded),
+                    volumeLowIcon: Icon(Icons.volume_down_rounded),
+                  ),
                 ),
                 const Spacer(),
                 StreamBuilder<Duration>(
@@ -357,16 +363,16 @@ class HomeScreen extends StatelessWidget {
                   padding: EdgeInsets.only(top: 30.0),
                   child: MaterialPlayOrPauseButton(),
                 ),
-                StreamBuilder<Duration>(
-                  stream: controller.player.stream.position,
-                  builder: (context, position) {
-                    if (position.hasData && position.data != null) {
-                      a = position.data!.inSeconds;
-                    }
-                    // log("${controller.player.state.duration.inSeconds} ", name: "Duration");
-                    return Padding(
-                      padding: const EdgeInsets.only(top: 37.0),
-                      child: Row(
+                Padding(
+                  padding: const EdgeInsets.only(top: 35.0),
+                  child: StreamBuilder<Duration>(
+                    stream: controller.player.stream.position,
+                    builder: (context, position) {
+                      if (position.hasData && position.data != null) {
+                        a = position.data!.inSeconds;
+                      }
+                      // log("${controller.player.state.duration.inSeconds} ", name: "Duration");
+                      return Row(
                         children: [
                           MaterialCustomButton(
                             onPressed: () {
@@ -411,9 +417,9 @@ class HomeScreen extends StatelessWidget {
                             iconSize: 30.0,
                           ),
                         ],
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
                 const Padding(
                   padding: EdgeInsets.only(top: 29.0),
