@@ -45,9 +45,7 @@ dependencies:
   media_kit_libs_video: ^1.0.4
   anydrawer: ^1.0.3
   media_kit_video:
-    git:
-      url: https://github.com/aabirsark/media-kit-dheeraj.git
-      path: media_kit_video
+    path: /Users/aabirsarkar/Documents/projects/dhir/media-kit-dheeraj/media_kit_video
 
 dev_dependencies:
   flutter_test:

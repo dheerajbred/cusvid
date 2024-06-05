@@ -48,7 +48,8 @@ class VideoPlayerFullscreen extends StatefulWidget {
   State<VideoPlayerFullscreen> createState() => _VideoPlayerFullscreenState();
 }
 
-class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with WidgetsBindingObserver{
+class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen>
+    with WidgetsBindingObserver {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   VideoState? videoState;
   bool isFullScreen = false;
@@ -69,10 +70,8 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-
     // Listening to app lifecycle changes to detect when the app enters the hidden state (minimized)
     if (state == AppLifecycleState.hidden && isPipAvailable) {
-      
       // Triggering PiP mode with a landscape aspect ratio when the app is minimized
       pip.enable(aspectRatio: const Rational.landscape());
     }
@@ -130,6 +129,7 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
       builder: (controller) {
         return SafeArea(
           child: PiPSwitcher(
+            floating: pip,
             childWhenEnabled: Scaffold(
               key: _scaffoldKey,
               // appBar: AppBar(
@@ -157,7 +157,8 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                     const Spacer(),
                     MaterialCustomButton(
                       onPressed: controller.speedSelector,
-                      icon: const ImageIcon(AssetImage("assets/speedometer.png")),
+                      icon:
+                          const ImageIcon(AssetImage("assets/speedometer.png")),
                       iconSize: 24.0,
                     ),
                     MaterialCustomButton(
@@ -196,8 +197,8 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                         ? widget.mediaInput!.extraWidget!
                         : MaterialCustomButton(
                             onPressed: controller.qualitySelector,
-                            icon:
-                                const ImageIcon(AssetImage("assets/setting.png")),
+                            icon: const ImageIcon(
+                                AssetImage("assets/setting.png")),
                             iconSize: 24.0,
                             iconColor: Colors.white,
                           ),
@@ -218,14 +219,14 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                                     "position is ${position.data?.inSeconds}");
                                 if (position.hasData && position.data != null) {
                                   controller.player.seek(Duration(
-                                      seconds: -((controller.player.state.duration
-                                                  .inSeconds -
+                                      seconds: -((controller.player.state
+                                                  .duration.inSeconds -
                                               (position.data!.inSeconds - 10))
                                           .abs())));
                                 } else {
                                   controller.player.seek(Duration(
-                                      seconds: -((controller.player.state.duration
-                                                  .inSeconds -
+                                      seconds: -((controller.player.state
+                                                  .duration.inSeconds -
                                               (a - 10))
                                           .abs())));
                                   a = min(a - 10, 0);
@@ -238,14 +239,14 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                               onPressed: () {
                                 if (position.hasData && position.data != null) {
                                   controller.player.seek(Duration(
-                                      seconds: -((controller.player.state.duration
-                                                  .inSeconds -
+                                      seconds: -((controller.player.state
+                                                  .duration.inSeconds -
                                               (position.data!.inSeconds + 10))
                                           .abs())));
                                 } else {
                                   controller.player.seek(Duration(
-                                      seconds: -((controller.player.state.duration
-                                                  .inSeconds -
+                                      seconds: -((controller.player.state
+                                                  .duration.inSeconds -
                                               (a + 10))
                                           .abs())));
                                   a += 10;
@@ -267,15 +268,15 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                       stream: controller.player.stream.position,
                       builder: (context, position) {
                         //  log("${controller.player.state.duration.inSeconds} ", name: "Duration");
-            
+
                         if ((a <=
                                 (widget.mediaInput == null
                                     ? 30 + x
                                     : widget.mediaInput!.skipButtonDuration ==
                                             null
                                         ? 30 + x
-                                        : (widget
-                                                .mediaInput!.skipButtonDuration! +
+                                        : (widget.mediaInput!
+                                                .skipButtonDuration! +
                                             x))) &&
                             (widget.mediaInput == null ||
                                 (widget.mediaInput != null &&
@@ -301,12 +302,14 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                             ),
                             //
                           );
-                        } else if (((controller.player.state.duration.inSeconds -
+                        } else if (((controller
+                                            .player.state.duration.inSeconds -
                                         a)
                                     .abs() <=
                                 (widget.mediaInput == null
                                     ? 50
-                                    : widget.mediaInput!.nextButtonShowOn == null
+                                    : widget.mediaInput!.nextButtonShowOn ==
+                                            null
                                         ? 50
                                         : widget
                                             .mediaInput!.nextButtonShowOn!)) &&
@@ -320,8 +323,8 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                                         : widget.mediaInput!.nextButtonShowOn ==
                                                 null
                                             ? 50
-                                            : widget
-                                                .mediaInput!.nextButtonShowOn!) -
+                                            : widget.mediaInput!
+                                                .nextButtonShowOn!) -
                                     y))) {
                           return GestureDetector(
                             onTap: () {
@@ -388,7 +391,8 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                         videoState?.exitFullscreen();
                         controller.speedSelector2();
                       },
-                      icon: const ImageIcon(AssetImage("assets/speedometer.png")),
+                      icon:
+                          const ImageIcon(AssetImage("assets/speedometer.png")),
                       iconSize: 30.0,
                     ),
                     MaterialCustomButton(
@@ -465,7 +469,8 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                                 onPressed: () {
                                   debugPrint(
                                       "position is ${position.data?.inSeconds}");
-                                  if (position.hasData && position.data != null) {
+                                  if (position.hasData &&
+                                      position.data != null) {
                                     controller.player.seek(Duration(
                                         seconds: -((controller.player.state
                                                     .duration.inSeconds -
@@ -485,7 +490,8 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                               ),
                               MaterialCustomButton(
                                 onPressed: () {
-                                  if (position.hasData && position.data != null) {
+                                  if (position.hasData &&
+                                      position.data != null) {
                                     controller.player.seek(Duration(
                                         seconds: -((controller.player.state
                                                     .duration.inSeconds -
@@ -520,15 +526,15 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                       stream: controller.player.stream.position,
                       builder: (context, position) {
                         //  log("${controller.player.state.duration.inSeconds} ", name: "Duration");
-            
+
                         if ((a <=
                                 (widget.mediaInput == null
                                     ? 30 + x
                                     : widget.mediaInput!.skipButtonDuration ==
                                             null
                                         ? 30 + x
-                                        : (widget
-                                                .mediaInput!.skipButtonDuration! +
+                                        : (widget.mediaInput!
+                                                .skipButtonDuration! +
                                             x))) &&
                             (widget.mediaInput == null ||
                                 (widget.mediaInput != null &&
@@ -559,12 +565,14 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                             icon: const Icon(Icons.skip_next_sharp),
                             label: const Text("Skip"),
                           );
-                        } else if (((controller.player.state.duration.inSeconds -
+                        } else if (((controller
+                                            .player.state.duration.inSeconds -
                                         a)
                                     .abs() <=
                                 (widget.mediaInput == null
                                     ? 50
-                                    : widget.mediaInput!.nextButtonShowOn == null
+                                    : widget.mediaInput!.nextButtonShowOn ==
+                                            null
                                         ? 50
                                         : widget
                                             .mediaInput!.nextButtonShowOn!)) &&
@@ -578,8 +586,8 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                                         : widget.mediaInput!.nextButtonShowOn ==
                                                 null
                                             ? 50
-                                            : widget
-                                                .mediaInput!.nextButtonShowOn!) -
+                                            : widget.mediaInput!
+                                                .nextButtonShowOn!) -
                                     y))) {
                           return GestureDetector(
                             onTap: () {
@@ -649,7 +657,8 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
                               defaultExitNativeFullscreen().then((value) {
                                 setHalfScreen();
                                 setState(() {});
-                                Future.delayed(const Duration(milliseconds: 500))
+                                Future.delayed(
+                                        const Duration(milliseconds: 500))
                                     .then((value) {
                                   Navigator.pop(context);
                                 });
@@ -679,49 +688,48 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen> with Widg
               ),
             ),
             childWhenDisabled: Builder(
-                        builder: (
-                          context,
-                        ) {
-                          SchedulerBinding.instance.addPostFrameCallback(
-                            (timeStamp) {
-                              setFullScreen();
-                            },
-                          );
-                          return Video(
-                            controls: (state) {
-                              videoState = state;
-                              return media_kit_video_controls
-                                  .AdaptiveVideoControls(state);
-                            },
-                            onExitFullscreen: () async {
-                              // setHalfScreen();
-                              defaultExitNativeFullscreen().then((value) {
-                                setHalfScreen();
-                                setState(() {});
-                                Future.delayed(const Duration(milliseconds: 500))
-                                    .then((value) {
-                                  Navigator.pop(context);
-                                });
-                              });
-                            },
-                            controller: controller.videoPlayerController,
-                            subtitleViewConfiguration:
-                                const SubtitleViewConfiguration(
-                              style: TextStyle(
-                                height: 1.4,
-                                fontSize: 24.0,
-                                letterSpacing: 0.0,
-                                wordSpacing: 0.0,
-                                color: Color(0xffffffff),
-                                fontWeight: FontWeight.normal,
-                                backgroundColor: Color(0xaa000000),
-                              ),
-                              textAlign: TextAlign.center,
-                              padding: EdgeInsets.all(12.0),
-                            ),
-                          );
-                        },
-                      ),
+              builder: (
+                context,
+              ) {
+                SchedulerBinding.instance.addPostFrameCallback(
+                  (timeStamp) {
+                    setFullScreen();
+                  },
+                );
+                return Video(
+                  controls: (state) {
+                    videoState = state;
+                    return media_kit_video_controls.AdaptiveVideoControls(
+                        state);
+                  },
+                  onExitFullscreen: () async {
+                    // setHalfScreen();
+                    defaultExitNativeFullscreen().then((value) {
+                      setHalfScreen();
+                      setState(() {});
+                      Future.delayed(const Duration(milliseconds: 500))
+                          .then((value) {
+                        Navigator.pop(context);
+                      });
+                    });
+                  },
+                  controller: controller.videoPlayerController,
+                  subtitleViewConfiguration: const SubtitleViewConfiguration(
+                    style: TextStyle(
+                      height: 1.4,
+                      fontSize: 24.0,
+                      letterSpacing: 0.0,
+                      wordSpacing: 0.0,
+                      color: Color(0xffffffff),
+                      fontWeight: FontWeight.normal,
+                      backgroundColor: Color(0xaa000000),
+                    ),
+                    textAlign: TextAlign.center,
+                    padding: EdgeInsets.all(12.0),
+                  ),
+                );
+              },
+            ),
           ),
         );
       },
