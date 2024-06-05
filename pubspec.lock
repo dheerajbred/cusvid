@@ -323,9 +323,11 @@ packages:
   media_kit_video:
     dependency: "direct main"
     description:
-      path: "/Users/aabirsarkar/Documents/projects/dhir/media-kit-dheeraj/media_kit_video"
-      relative: false
-    source: path
+      path: media_kit_video
+      ref: HEAD
+      resolved-ref: "321c8741d5c317806452eb70f3682147407fb5c5"
+      url: "https://github.com/aabirsark/media-kit-dheeraj.git"
+    source: git
     version: "1.2.4"
   meta:
     dependency: transitive
