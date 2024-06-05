@@ -130,7 +130,7 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen>
         return SafeArea(
           child: PiPSwitcher(
             floating: pip,
-            childWhenEnabled: Scaffold(
+            childWhenDisabled: Scaffold(
               key: _scaffoldKey,
               // appBar: AppBar(
               //   title: const Text("Video Player"),
@@ -687,7 +687,7 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen>
                 ),
               ),
             ),
-            childWhenDisabled: Builder(
+            childWhenEnabled: Builder(
               builder: (
                 context,
               ) {
