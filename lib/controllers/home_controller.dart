@@ -39,11 +39,11 @@ class HomeController extends GetxController {
           ),
         );
 
-        if (isSubtitleEnabled.value == true) {
-          player.setSubtitleTrack(SubtitleTrack.auto());
-        } else {
-          player.setSubtitleTrack(SubtitleTrack.no());
-        }
+        // if (isSubtitleEnabled.value == true) {
+        player.setSubtitleTrack(SubtitleTrack.auto());
+        // } else {
+        //   player.setSubtitleTrack(SubtitleTrack.no());
+        // }
       } else {
         VideoClass video = VideoClass(
           videoURL: mediaInputValue!.videoUrl!,
@@ -302,7 +302,7 @@ class HomeController extends GetxController {
 
   ///Functionality For Enable PIP Mode
   Future<void> enablePIPMode(BuildContext context) async {
-    final rational = const Rational.landscape();
+    const rational = Rational.landscape();
     final screenSize =
         MediaQuery.of(context).size * MediaQuery.of(context).devicePixelRatio;
     final height = screenSize.width ~/ rational.aspectRatio;
@@ -364,9 +364,13 @@ class HomeController extends GetxController {
                                 player.setSubtitleTrack(SubtitleTrack.no());
                               } else {
                                 isSubtitleEnabled.value = true;
-                                player.setSubtitleTrack(SubtitleTrack.uri(
-                                    testSubtitleLink,
-                                    language: 'en'));
+                                player
+                                    .setSubtitleTrack(SubtitleTrack.uri(
+                                        mediaInputValue!.subtitleUrl![0],
+                                        language: 'en'))
+                                    .then((value) {
+                                  print(player.state.track.subtitle.data);
+                                });
                               }
                               Get.back();
                             },

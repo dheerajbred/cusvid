@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
 import 'dart:developer';
 import 'dart:math';
@@ -8,18 +9,22 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:manual_video_player/Animation/animated.dart';
-import 'package:manual_video_player/models/quality_class.dart';
-import 'package:media_kit/media_kit.dart';
+import 'package:manual_video_player/screens/video_player.screen.page.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:media_kit_video/media_kit_video_controls/src/controls/methods/video_state.dart';
 import 'package:video_cast/chrome_cast_media_type.dart';
 import 'package:video_cast/video_cast.dart';
 
+import 'package:manual_video_player/Animation/animated.dart';
+import 'package:manual_video_player/models/quality_class.dart';
+
 import '../controllers/home_controller.dart';
 
 class HomeScreen extends StatelessWidget {
-  HomeScreen({super.key, this.mediaInput});
+  HomeScreen({
+    super.key,
+    this.mediaInput,
+  });
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   var a = 0;
   final MediaInputValue? mediaInput;
@@ -250,11 +255,6 @@ class HomeScreen extends StatelessWidget {
                         ),
                         //
                       );
-                      ElevatedButton.icon(
-                        onPressed: controller.onNext,
-                        icon: const Icon(Icons.navigate_next),
-                        label: const Text("Next Episode"),
-                      );
                     } else {
                       return const Padding(
                         padding: EdgeInsets.only(bottom: 4),
@@ -281,31 +281,27 @@ class HomeScreen extends StatelessWidget {
               volumeGesture: true,
               displaySeekBar: true,
               seekOnDoubleTap: true,
-              buttonBarButtonSize: 24.0,
+              buttonBarButtonSize: 30.0,
               buttonBarButtonColor: Colors.white,
               topButtonBar: [
                 const MaterialFullscreenButton(
                   icon: Icon(Icons.arrow_back),
-                  iconSize: 24.0,
+                  iconSize: 30.0,
                 ),
                 const SizedBox(height: 8),
-                //TODO: Change to Video Title
                 const Text("Full"),
                 const Spacer(),
-
-                //TODO: Do Necessary Changes
                 MaterialCustomButton(
                   onPressed: () {
                     controller.speedSelector2();
                   },
                   icon: const ImageIcon(AssetImage("assets/speedometer.png")),
-                  iconSize: 24.0,
+                  iconSize: 30.0,
                 ),
-                //TODO: Do Necessary Changes
                 MaterialCustomButton(
                   onPressed: controller.toggleSubtitles2,
                   icon: const ImageIcon(AssetImage("assets/caption.png")),
-                  iconSize: 24.0,
+                  iconSize: 30.0,
                   iconColor: Colors.white,
                 ),
                 ChromeCastButton(
@@ -325,17 +321,34 @@ class HomeScreen extends StatelessWidget {
                     );
                   },
                 ),
-                //TODO: Episodes
-                MaterialCustomButton(
-                  onPressed: controller.chapterselect2,
+                MaterialFullscreenSidebarButton(
                   icon: const ImageIcon(AssetImage("assets/episodes.png")),
-                  iconSize: 24.0,
-                  iconColor: Colors.white,
+                  slidebar: Container(
+                    height: double.infinity,
+                    width: double.infinity,
+                    color: Colors.white,
+                    child: SafeArea(
+                      child: Wrap(
+                        runSpacing: 10,
+                        spacing: 10,
+                        children: List.generate(
+                            10,
+                            (index) => Container(
+                                  width: 30,
+                                  height: 30,
+                                  color: Colors.blue,
+                                  child: Center(
+                                    child: Text(index.toString()),
+                                  ),
+                                )),
+                      ),
+                    ),
+                  ),
                 ),
                 MaterialCustomButton(
                   onPressed: controller.qualitySelector2,
                   icon: const ImageIcon(AssetImage("assets/setting.png")),
-                  iconSize: 24.0,
+                  iconSize: 30.0,
                   iconColor: Colors.white,
                 ),
               ],
@@ -375,7 +388,7 @@ class HomeScreen extends StatelessWidget {
                               }
                             },
                             icon: const Icon(Icons.replay_10_outlined),
-                            iconSize: 24.0,
+                            iconSize: 30.0,
                           ),
                           MaterialCustomButton(
                             onPressed: () {
@@ -395,7 +408,7 @@ class HomeScreen extends StatelessWidget {
                               }
                             },
                             icon: const Icon(Icons.forward_10_outlined),
-                            iconSize: 24.0,
+                            iconSize: 30.0,
                           ),
                         ],
                       ),
@@ -512,29 +525,45 @@ class HomeScreen extends StatelessWidget {
             ),
             child: SingleChildScrollView(
               child: Center(
-                child: SizedBox(
-                  height: MediaQuery.of(context).size.width * 9.0 / 16.0,
-                  width: MediaQuery.of(context).size.width,
-                  child: Video(
-                    controller: controller.videoPlayerController,
-                    subtitleViewConfiguration: const SubtitleViewConfiguration(
-                      style: TextStyle(
-                        height: 1.4,
-                        fontSize: 24.0,
-                        letterSpacing: 0.0,
-                        wordSpacing: 0.0,
-                        color: Color(0xffffffff),
-                        fontWeight: FontWeight.normal,
-                        backgroundColor: Color(0xaa000000),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: MediaQuery.of(context).size.width * 9.0 / 16.0,
+                      width: MediaQuery.of(context).size.width,
+                      child: Video(
+                        controller: controller.videoPlayerController,
+                        subtitleViewConfiguration:
+                            const SubtitleViewConfiguration(
+                          style: TextStyle(
+                            height: 1.4,
+                            fontSize: 24.0,
+                            letterSpacing: 0.0,
+                            wordSpacing: 0.0,
+                            color: Color(0xffffffff),
+                            fontWeight: FontWeight.normal,
+                            backgroundColor: Color(0xaa000000),
+                          ),
+                          textAlign: TextAlign.center,
+                          padding: EdgeInsets.all(24.0),
+                        ),
                       ),
-                      textAlign: TextAlign.center,
-                      padding: EdgeInsets.all(24.0),
                     ),
-                  ),
+                    ElevatedButton(
+                      child: Text("Play"),
+                      onPressed: () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => VideoPlayerFullscreen(
+                              mediaInput: mediaInput,
+                            ),
+                          )),
+                    )
+                  ],
                 ),
               ),
             ),
           ),
+
           floatingActionButton: FloatingActionButton(
             onPressed: () {
               controller.playVideoFromDirectLinkWithQualities();
