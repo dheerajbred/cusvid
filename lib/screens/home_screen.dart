@@ -9,6 +9,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:manual_video_player/models/media_inpput_value.dart';
 import 'package:manual_video_player/screens/video_player.screen.page.dart';
 import 'package:media_kit_video/media_kit_video.dart';
 import 'package:media_kit_video/media_kit_video_controls/src/controls/methods/video_state.dart';
@@ -31,16 +32,6 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int x = mediaInput == null
-        ? 0
-        : mediaInput!.skipButtonShowOn == null
-            ? 0
-            : mediaInput!.skipButtonShowOn!;
-    int y = mediaInput == null
-        ? 50
-        : mediaInput!.nextButtonShowOn == null
-            ? 50
-            : mediaInput!.nextButtonDuration!;
     if (mediaInput != null) {
       debugPrint("value is of ${mediaInput!.videoUrl}");
     }
@@ -177,9 +168,9 @@ class HomeScreen extends StatelessWidget {
                     },
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 5.0),
-                  child: const MaterialDesktopVolumeButton(
+                const Padding(
+                  padding: EdgeInsets.only(bottom: 5.0),
+                  child: MaterialDesktopVolumeButton(
                     volumeHighIcon: Icon(Icons.volume_up_rounded),
                     volumeLowIcon: Icon(Icons.volume_down_rounded),
                   ),
@@ -188,87 +179,90 @@ class HomeScreen extends StatelessWidget {
                 StreamBuilder<Duration>(
                   stream: controller.player.stream.position,
                   builder: (context, position) {
-                    //  log("${controller.player.state.duration.inSeconds} ", name: "Duration");
-
-                    if ((a <=
-                            (mediaInput == null
-                                ? 30 + x
-                                : mediaInput!.skipButtonDuration == null
-                                    ? 30 + x
-                                    : (mediaInput!.skipButtonDuration! + x))) &&
-                        (mediaInput == null ||
-                            (mediaInput != null &&
-                                mediaInput!.skipButtonEnabled)) &&
-                        (a >= x)) {
-                      return GestureDetector(
-                        onTap: () {
-                          debugPrint("Hello world i am here");
-                          controller.onSkip();
-                        },
-                        child: Stack(
-                          children: [
-                            AnimationContainer(
-                              text: 'SKIP',
-                              onPressedController: () {},
-                            ),
-                            Container(
-                              width: 120,
-                              height: 60,
-                              color: Colors.transparent,
-                            ),
-                          ],
-                        ),
-                        //
-                      );
-                    } else if (((controller.player.state.duration.inSeconds - a)
-                                .abs() <=
-                            (mediaInput == null
-                                ? 50
-                                : mediaInput!.nextButtonShowOn == null
-                                    ? 50
-                                    : mediaInput!.nextButtonShowOn!)) &&
-                        (mediaInput == null ||
-                            (mediaInput != null &&
-                                mediaInput!.nextButtonEnabled)) &&
-                        ((controller.player.state.duration.inSeconds - a)
-                                .abs() >=
-                            ((mediaInput == null
-                                    ? 50
-                                    : mediaInput!.nextButtonShowOn == null
-                                        ? 50
-                                        : mediaInput!.nextButtonShowOn!) -
-                                y))) {
-                      return GestureDetector(
-                        onTap: () {
-                          mediaInput != null &&
-                                  mediaInput!.userProvidedFunction != null
-                              ? mediaInput!.userProvidedFunction
-                              : controller.onNext;
-                          debugPrint("Hello world i am here");
-                        },
-                        child: Stack(
-                          children: [
-                            AnimationContainer(
-                              text: 'NEXT EPISODE',
-                              onPressedController: () {},
-                            ),
-                            Container(
-                              width: 120,
-                              height: 60,
-                              color: Colors.transparent,
-                            ),
-                          ],
-                        ),
-                        //
-                      );
-                    } else {
-                      return const Padding(
-                        padding: EdgeInsets.only(bottom: 4),
-                        child: MaterialPositionIndicator(
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      );
+                    if (position.data == null) {
+                      return const SizedBox.shrink();
                     }
+
+                    // Check if any skip button should be shown
+                    List<Widget> skipWidgets = [];
+                    if (mediaInput != null) {
+                      skipWidgets = mediaInput!.skipButtons
+                          .where((skip) =>
+                              skip.enabled &&
+                              position.data!.inSeconds >= skip.activateOn &&
+                              position.data!.inSeconds <=
+                                  (skip.activateOn + skip.duration))
+                          .map((skip) {
+                        return GestureDetector(
+                          onTap: () {
+                            controller.onSkip(
+                                seconds:
+                                    position.data!.inSeconds + skip.skipTime);
+                          },
+                          child: Stack(
+                            children: [
+                              AnimationContainer(
+                                text: skip.label,
+                                onPressedController: () {},
+                              ),
+                              Container(
+                                width: 120,
+                                height: 60,
+                                color: Colors.transparent,
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList();
+                    }
+
+                    return Stack(
+                      children: skipWidgets,
+                    );
+                  },
+                ),
+                StreamBuilder<Duration>(
+                  stream: controller.player.stream.position,
+                  builder: (context, position) {
+                    if (position.data == null) {
+                      return const SizedBox.shrink();
+                    }
+
+                    final duration =
+                        (controller.player.state.duration.inSeconds).abs();
+
+                    List<Widget> skipWidgets = [];
+                    if (mediaInput != null) {
+                      skipWidgets = mediaInput!.nextButtons
+                          .where((next) =>
+                              (duration - position.data!.inSeconds) <=
+                                  next.activateTimeLeft &&
+                              (duration - position.data!.inSeconds) >=
+                                  next.duration &&
+                              next.enabled)
+                          .map((next) {
+                        return GestureDetector(
+                          onTap: next.callback,
+                          child: Stack(
+                            children: [
+                              AnimationContainer(
+                                text: next.label,
+                                onPressedController: () {},
+                              ),
+                              Container(
+                                width: 120,
+                                height: 60,
+                                color: Colors.transparent,
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList();
+                    }
+
+                    return Stack(
+                      children: skipWidgets,
+                    );
                   },
                 ),
                 const SizedBox(width: 5),
@@ -432,90 +426,7 @@ class HomeScreen extends StatelessWidget {
                 StreamBuilder<Duration>(
                   stream: controller.player.stream.position,
                   builder: (context, position) {
-                    //  log("${controller.player.state.duration.inSeconds} ", name: "Duration");
-
-                    if ((a <=
-                            (mediaInput == null
-                                ? 30 + x
-                                : mediaInput!.skipButtonDuration == null
-                                    ? 30 + x
-                                    : (mediaInput!.skipButtonDuration! + x))) &&
-                        (mediaInput == null ||
-                            (mediaInput != null &&
-                                mediaInput!.skipButtonEnabled)) &&
-                        (a >= x)) {
-                      return GestureDetector(
-                        onTap: () {
-                          debugPrint("Hello world i am here");
-                          controller.onSkip();
-                        },
-                        child: Stack(
-                          children: [
-                            AnimationContainer(
-                              text: 'SKIP',
-                              onPressedController: () {},
-                            ),
-                            Container(
-                              width: 120,
-                              height: 60,
-                              color: Colors.transparent,
-                            ),
-                          ],
-                        ),
-                        //
-                      );
-                      ElevatedButton.icon(
-                        onPressed: controller.onSkip,
-                        icon: const Icon(Icons.skip_next_sharp),
-                        label: const Text("Skip"),
-                      );
-                    } else if (((controller.player.state.duration.inSeconds - a)
-                                .abs() <=
-                            (mediaInput == null
-                                ? 50
-                                : mediaInput!.nextButtonShowOn == null
-                                    ? 50
-                                    : mediaInput!.nextButtonShowOn!)) &&
-                        (mediaInput == null ||
-                            (mediaInput != null &&
-                                mediaInput!.nextButtonEnabled)) &&
-                        ((controller.player.state.duration.inSeconds - a)
-                                .abs() >=
-                            ((mediaInput == null
-                                    ? 50
-                                    : mediaInput!.nextButtonShowOn == null
-                                        ? 50
-                                        : mediaInput!.nextButtonShowOn!) -
-                                y))) {
-                      return GestureDetector(
-                        onTap: () {
-                          mediaInput != null &&
-                                  mediaInput!.userProvidedFunction != null
-                              ? mediaInput!.userProvidedFunction
-                              : controller.onNext;
-                          debugPrint("Hello world i am here");
-                        },
-                        child: Stack(
-                          children: [
-                            AnimationContainer(
-                              text: 'NEXT EPISODE',
-                              onPressedController: () {},
-                            ),
-                            Container(
-                              width: 120,
-                              height: 60,
-                              color: Colors.transparent,
-                            ),
-                          ],
-                        ),
-                        //
-                      );
-                      ElevatedButton.icon(
-                        onPressed: controller.onNext,
-                        icon: const Icon(Icons.navigate_next),
-                        label: const Text("Next Episode"),
-                      );
-                    } else {
+                    if (position.data == null) {
                       return const Padding(
                         padding: EdgeInsets.only(bottom: 4),
                         child: MaterialPositionIndicator(
@@ -523,6 +434,83 @@ class HomeScreen extends StatelessWidget {
                         ),
                       );
                     }
+
+                    // Check if any skip button should be shown
+                    List<Widget> skipWidgets = [];
+                    if (mediaInput != null) {
+                      skipWidgets.addAll(mediaInput!.skipButtons
+                          .where((skip) =>
+                              skip.enabled &&
+                              position.data!.inSeconds >= skip.activateOn &&
+                              position.data!.inSeconds <=
+                                  (skip.activateOn + skip.duration))
+                          .map((skip) {
+                        return GestureDetector(
+                          onTap: () {
+                            controller.onSkip(
+                                seconds:
+                                    position.data!.inSeconds + skip.skipTime);
+                          },
+                          child: Stack(
+                            children: [
+                              AnimationContainer(
+                                text: skip.label,
+                                onPressedController: () {},
+                              ),
+                              Container(
+                                width: 120,
+                                height: 60,
+                                color: Colors.transparent,
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList());
+                    }
+
+                    final duration =
+                        (controller.player.state.duration.inSeconds).abs();
+
+                    if (mediaInput != null) {
+                      skipWidgets.addAll(mediaInput!.nextButtons
+                          .where((next) =>
+                              (duration - position.data!.inSeconds) <=
+                                  next.activateTimeLeft &&
+                              (duration - position.data!.inSeconds) >=
+                                  next.duration &&
+                              next.enabled)
+                          .map((next) {
+                        return GestureDetector(
+                          onTap: next.callback,
+                          child: Stack(
+                            children: [
+                              AnimationContainer(
+                                text: next.label,
+                                onPressedController: () {},
+                              ),
+                              Container(
+                                width: 120,
+                                height: 60,
+                                color: Colors.transparent,
+                              ),
+                            ],
+                          ),
+                        );
+                      }).toList());
+                    }
+
+                    if (skipWidgets.isEmpty) {
+                      return const Padding(
+                        padding: EdgeInsets.only(bottom: 4),
+                        child: MaterialPositionIndicator(
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      );
+                    }
+
+                    return Stack(
+                      children: skipWidgets,
+                    );
                   },
                 ),
                 const SizedBox(width: 5),
@@ -555,7 +543,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     ElevatedButton(
-                      child: Text("Play"),
+                      child: const Text("Play"),
                       onPressed: () => Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -588,44 +576,4 @@ enum MediaType {
 
 Widget MyCustomPlayerWidget(MediaInputValue mediaInputValue) {
   return HomeScreen(mediaInput: mediaInputValue);
-}
-
-class MediaInputValue {
-  final MediaType type;
-  final String? videoUrl;
-  final List<String>? subtitleUrl;
-  final bool skipButtonEnabled;
-  final int? skipButtonShowOn;
-  final int? skipButtonSkipTo;
-  final int? skipButtonDuration;
-
-  final int? nextButtonDuration;
-  // nextButtonShowOn -> time in seconds before the video ends..
-  final int? nextButtonShowOn;
-  final bool nextButtonEnabled;
-  final bool? extraWidgetEnabled;
-  final Widget? extraWidget;
-  final List<QualityClass>? qualityUrl;
-  final FilePickerResult? file;
-  final void Function()? userProvidedFunction;
-  MediaInputValue(
-      {required this.type,
-      this.nextButtonShowOn,
-      this.skipButtonSkipTo,
-      this.skipButtonShowOn,
-      required this.skipButtonEnabled,
-      this.videoUrl,
-      this.userProvidedFunction,
-      this.extraWidget,
-      required this.extraWidgetEnabled,
-      required this.nextButtonEnabled,
-      this.subtitleUrl,
-      this.nextButtonDuration,
-      this.skipButtonDuration,
-      this.qualityUrl,
-      this.file})
-      : assert(type != MediaType.playFromLink || videoUrl != null,
-            'Video URL is required for Video with link'),
-        assert(type != MediaType.chooseVideo || file != null,
-            'Video URL is required for Video with link');
 }

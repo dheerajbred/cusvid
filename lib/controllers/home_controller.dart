@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hls_parser/flutter_hls_parser.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart';
+import 'package:manual_video_player/models/media_inpput_value.dart';
 import 'package:manual_video_player/models/quality_class.dart';
 import 'package:manual_video_player/models/video_class.dart';
 import 'package:manual_video_player/screens/home_screen.dart';
@@ -1004,8 +1005,8 @@ class HomeController extends GetxController {
   }
 
   ///Functionality For Skip Button\
-  Future<void> onSkip() async {
-    player.seek(const Duration(minutes: 1));
+  Future<void> onSkip({int? seconds}) async {
+    player.seek(Duration(seconds: seconds ?? 0));
     await player.play();
     update();
   }

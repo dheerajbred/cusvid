@@ -15,7 +15,8 @@ class AnimationContainer extends StatefulWidget {
   State<AnimationContainer> createState() => _AnimationContainerState();
 }
 
-class _AnimationContainerState extends State<AnimationContainer> with TickerProviderStateMixin{
+class _AnimationContainerState extends State<AnimationContainer>
+    with TickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<int> _animation;
   var currentValue = 0.0;
@@ -28,17 +29,15 @@ class _AnimationContainerState extends State<AnimationContainer> with TickerProv
     )..forward();
 
     _animation = IntTween(begin: 0, end: 100).animate(
-
       CurvedAnimation(
         parent: _animationController,
         curve: Curves.easeInOut,
       ),
-
     )..addListener(() {
-      // This will be called every time the value of the animation changes
-      currentValue = _animation.value/100;
-      // Use the animationValue as needed in your code
-    });
+        // This will be called every time the value of the animation changes
+        currentValue = _animation.value / 100;
+        // Use the animationValue as needed in your code
+      });
 
     // _animation.addStatusListener((status) {
     //   // if (status == AnimationStatus.completed) {
@@ -46,6 +45,7 @@ class _AnimationContainerState extends State<AnimationContainer> with TickerProv
     //   // }
     // });
   }
+
   @override
   void dispose() {
     _animationController.dispose();
@@ -72,12 +72,10 @@ class _AnimationContainerState extends State<AnimationContainer> with TickerProv
               stops: [currentValue, 0], // Define the stop points (40% and 60%)
             ),
           ),
-          child: TextButton(
-            onPressed: () {
-
-            },
+          child: Center(
             child: Text(
               widget.text,
+              textAlign: TextAlign.center,
               style: TextStyle(
                 color: Colors.black, // Change text color as needed
               ),
