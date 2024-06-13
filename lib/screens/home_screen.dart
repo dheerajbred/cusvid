@@ -193,6 +193,7 @@ class HomeScreen extends StatelessWidget {
                   nextButton: mediaInput?.nextButtons
                           .map((e) => MediaKitNextButton(
                               duration: e.duration,
+                              callback: e.callback,
                               activateTimeLeft: e.activateTimeLeft,
                               label: e.label,
                               enabled: e.enabled))
@@ -410,7 +411,7 @@ class HomeScreen extends StatelessWidget {
                                     return GestureDetector(
                                       onTap: () {
                                         controller.onSkip(
-                                            seconds: position.data!.inSeconds +
+                                            seconds: skip.activateOn +
                                                 skip.skipTime);
                                       },
                                       child: Stack(

@@ -64,6 +64,9 @@ class MyApp extends StatelessWidget {
               NextButton(
                   duration: 20,
                   activateTimeLeft: 30,
+                  callback: () {
+                    print("object");
+                  },
                   label: "NEXT EPISODE",
                   enabled: true)
             ],
