@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:manual_video_player/controllers/home_controller.dart';
+import 'package:manual_video_player/models/media_inpput_value.dart';
 import 'package:manual_video_player/screens/home_screen.dart';
 import 'package:manual_video_player/screens/video_player.screen.page.dart';
 import 'package:media_kit/media_kit.dart';
@@ -50,13 +52,22 @@ class MyApp extends StatelessWidget {
               "https://www.capsubservices.com/assets/downloads/subtitle/01hour/SubRip%2001%20Hour.srt",
               "https://www.capsubservices.com/assets/downloads/subtitle/01hour/SubRip%2001%20Hour.srt"
             ],
-            skipButtonEnabled: true,
-            skipButtonShowOn: 20,
-            skipButtonDuration: 5,
-            skipButtonSkipTo: 10,
-            nextButtonEnabled: true,
-            nextButtonDuration: 7,
-            nextButtonShowOn: 40,
+            skipButtons: [
+              SkipButton(
+                  duration: 20,
+                  activateOn: 30,
+                  label: "SKIP",
+                  skipTime: 20,
+                  enabled: true)
+            ],
+            nextButtons: [
+              NextButton(
+                  duration: 20,
+                  activateTimeLeft: 30,
+                  label: "NEXT EPISODE",
+                  enabled: true)
+            ],
+            sidebarWidget: SidebarWidget(),
             extraWidgetEnabled: true,
             extraWidget: Container(
               child: Text("HiEXtra"),
