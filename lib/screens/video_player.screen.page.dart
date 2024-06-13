@@ -15,6 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:manual_video_player/screens/home_screen.dart';
 import 'package:media_kit_video/media_kit_video.dart';
+import 'package:media_kit_video/media_kit_video_controls/src/controls/methods/models/skip_next_button.dart';
 import 'package:media_kit_video/media_kit_video_controls/src/controls/methods/video_state.dart';
 import 'package:video_cast/chrome_cast_media_type.dart';
 import 'package:video_cast/video_cast.dart';
@@ -89,7 +90,24 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen>
   setFullScreen() {
     if (!isFullScreen && !taskClosed) {
       isFullScreen = true;
-      videoState?.enterFullscreen();
+      videoState?.enterFullscreen(
+          mediaSkip: widget.mediaInput?.skipButtons
+                  .map((e) => MediaKitSkipButton(
+                      duration: e.duration,
+                      activateOn: e.activateOn,
+                      label: e.label,
+                      skipTime: e.skipTime,
+                      enabled: e.enabled))
+                  .toList() ??
+              [],
+          nextButton: widget.mediaInput?.nextButtons
+                  .map((e) => MediaKitNextButton(
+                      duration: e.duration,
+                      activateTimeLeft: e.activateTimeLeft,
+                      label: e.label,
+                      enabled: e.enabled))
+                  .toList() ??
+              []);
       SystemChrome.setPreferredOrientations([
         DeviceOrientation.landscapeLeft,
         DeviceOrientation.landscapeRight,
@@ -111,7 +129,6 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen>
 
   @override
   Widget build(BuildContext context) {
-
     if (widget.mediaInput != null) {
       debugPrint("value is of ${widget.mediaInput!.videoUrl}");
     }
@@ -178,7 +195,8 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen>
                     ),
                     MaterialCustomButton(
                       onPressed: () {
-                        controller.chapterselect();
+                        controller
+                            .chapterselect(widget.mediaInput?.sidebarWidget);
                       },
                       icon: const ImageIcon(AssetImage("assets/episodes.png")),
                       iconSize: 24.0,
@@ -256,97 +274,27 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen>
                       volumeLowIcon: Icon(Icons.volume_down_rounded),
                     ),
                     const Spacer(),
-                    StreamBuilder<Duration>(
-                      stream: controller.player.stream.position,
-                      builder: (context, position) {
-                        if (position.data == null) {
-                          return const SizedBox.shrink();
-                        }
-
-                        // Check if any skip button should be shown
-                        List<Widget> skipWidgets = [];
-                        if (widget.mediaInput != null) {
-                          skipWidgets = widget.mediaInput!.skipButtons
-                              .where((skip) =>
-                                  skip.enabled &&
-                                  position.data!.inSeconds >= skip.activateOn &&
-                                  position.data!.inSeconds <=
-                                      (skip.activateOn + skip.duration))
-                              .map((skip) {
-                            return GestureDetector(
-                              onTap: () {
-                                controller.onSkip(
-                                    seconds: position.data!.inSeconds +
-                                        skip.skipTime);
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimationContainer(
-                                    text: skip.label,
-                                    onPressedController: () {},
-                                  ),
-                                  Container(
-                                    width: 120,
-                                    height: 60,
-                                    color: Colors.transparent,
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList();
-                        }
-
-                        return Stack(
-                          children: skipWidgets,
-                        );
-                      },
-                    ),
-                    StreamBuilder<Duration>(
-                      stream: controller.player.stream.position,
-                      builder: (context, position) {
-                        if (position.data == null) {
-                          return const SizedBox.shrink();
-                        }
-
-                        final duration =
-                            (controller.player.state.duration.inSeconds).abs();
-
-                        List<Widget> skipWidgets = [];
-                        if (widget.mediaInput != null) {
-                          skipWidgets = widget.mediaInput!.nextButtons
-                              .where((next) =>
-                                  (duration - position.data!.inSeconds) <=
-                                      next.activateTimeLeft &&
-                                  (duration - position.data!.inSeconds) >=
-                                      next.duration &&
-                                  next.enabled)
-                              .map((next) {
-                            return GestureDetector(
-                              onTap: next.callback,
-                              child: Stack(
-                                children: [
-                                  AnimationContainer(
-                                    text: next.label,
-                                    onPressedController: () {},
-                                  ),
-                                  Container(
-                                    width: 120,
-                                    height: 60,
-                                    color: Colors.transparent,
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList();
-                        }
-
-                        return Stack(
-                          children: skipWidgets,
-                        );
-                      },
-                    ),
                     const SizedBox(width: 5),
-                    const MaterialFullscreenButton(iconSize: 24),
+                    MaterialFullscreenButton(
+                      iconSize: 24,
+                      skipButton: widget.mediaInput?.skipButtons
+                              .map((e) => MediaKitSkipButton(
+                                  duration: e.duration,
+                                  activateOn: e.activateOn,
+                                  label: e.label,
+                                  skipTime: e.skipTime,
+                                  enabled: e.enabled))
+                              .toList() ??
+                          [],
+                      nextButton: widget.mediaInput?.nextButtons
+                              .map((e) => MediaKitNextButton(
+                                  duration: e.duration,
+                                  activateTimeLeft: e.activateTimeLeft,
+                                  label: e.label,
+                                  enabled: e.enabled))
+                              .toList() ??
+                          [],
+                    ),
                   ],
                 ),
                 fullscreen: MaterialVideoControlsThemeData(
@@ -507,95 +455,11 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen>
                       ),
                     ),
                     const Spacer(),
-                    StreamBuilder<Duration>(
-                      stream: controller.player.stream.position,
-                      builder: (context, position) {
-                        if (position.data == null) {
-                          return const Padding(
-                            padding: EdgeInsets.only(bottom: 4),
-                            child: MaterialPositionIndicator(
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          );
-                        }
-
-                        // Check if any skip button should be shown
-                        List<Widget> skipWidgets = [];
-                        if (widget.mediaInput != null) {
-                          skipWidgets.addAll(widget.mediaInput!.skipButtons
-                              .where((skip) =>
-                                  skip.enabled &&
-                                  position.data!.inSeconds >= skip.activateOn &&
-                                  position.data!.inSeconds <=
-                                      (skip.activateOn + skip.duration))
-                              .map((skip) {
-                            return GestureDetector(
-                              onTap: () {
-                                controller.onSkip(
-                                    seconds: position.data!.inSeconds +
-                                        skip.skipTime);
-                              },
-                              child: Stack(
-                                children: [
-                                  AnimationContainer(
-                                    text: skip.label,
-                                    onPressedController: () {},
-                                  ),
-                                  Container(
-                                    width: 120,
-                                    height: 60,
-                                    color: Colors.transparent,
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList());
-                        }
-
-                        final duration =
-                            (controller.player.state.duration.inSeconds).abs();
-
-                        if (widget.mediaInput != null) {
-                          skipWidgets.addAll(widget.mediaInput!.nextButtons
-                              .where((next) =>
-                                  (duration - position.data!.inSeconds) <=
-                                      next.activateTimeLeft &&
-                                  (duration - position.data!.inSeconds) >=
-                                      next.duration &&
-                                  next.enabled)
-                              .map((next) {
-                            return GestureDetector(
-                              onTap: next.callback,
-                              child: Stack(
-                                children: [
-                                  AnimationContainer(
-                                    text: next.label,
-                                    onPressedController: () {},
-                                  ),
-                                  Container(
-                                    width: 120,
-                                    height: 60,
-                                    color: Colors.transparent,
-                                  ),
-                                ],
-                              ),
-                            );
-                          }).toList());
-                        }
-
-                        if (skipWidgets.isEmpty) {
-                          return const Padding(
-                            padding: EdgeInsets.only(bottom: 4),
-                            child: MaterialPositionIndicator(
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          );
-                        }
-
-                        return Stack(
-                          children: skipWidgets,
-                        );
-                      },
+                    const Padding(
+                      padding: EdgeInsets.only(bottom: 4),
+                      child: MaterialPositionIndicator(
+                        style: TextStyle(color: Colors.white),
+                      ),
                     ),
                     const SizedBox(width: 5),
                     const MaterialFullscreenButton(iconSize: 24),

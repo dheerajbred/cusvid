@@ -11,17 +11,18 @@ class MediaInputValue {
   final List<SkipButton> skipButtons;
   final List<NextButton> nextButtons;
 
-  
   final bool? extraWidgetEnabled;
   final Widget? extraWidget;
   final List<QualityClass>? qualityUrl;
   final FilePickerResult? file;
   final void Function()? userProvidedFunction;
+  final Widget? sidebarWidget;
+
   MediaInputValue(
-      {required this.skipButtons,
+      {this.sidebarWidget,
+      required this.skipButtons,
       required this.nextButtons,
       required this.type,
-      
       this.videoUrl,
       this.userProvidedFunction,
       this.extraWidget,

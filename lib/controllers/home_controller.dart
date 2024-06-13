@@ -588,7 +588,7 @@ class HomeController extends GetxController {
     update();
   }
 
-  void chapterselect() {
+  void chapterselect(Widget? sidebarWidget) {
     Get.back();
     Get.bottomSheet(Wrap(
       children: [
@@ -597,120 +597,7 @@ class HomeController extends GetxController {
               height: Get.height * 0.4,
               width: Get.width,
               color: Colors.black45,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 18.0, right: 18),
-                child: Column(
-                  children: [
-                    const Padding(
-                      padding: EdgeInsets.only(left: 14.0, top: 10),
-                      child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            "Chapters",
-                            style: TextStyle(fontSize: 20),
-                          )),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                          shrinkWrap: false,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemCount: 4,
-                          itemBuilder: (BuildContext context, int index) {
-                            return Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                      child: Container(
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0, horizontal: 16),
-                                          child: Text(
-                                            "${index + 1}",
-                                            style: TextStyle(
-                                                fontSize: Get.width * 0.045),
-                                          ),
-                                        ),
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black45,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10)),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black45,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10)),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0, horizontal: 16),
-                                          child: Text(
-                                            "${index + 5}",
-                                            style: TextStyle(
-                                                fontSize: Get.width * 0.045),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black45,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10)),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0, horizontal: 16),
-                                          child: Text(
-                                            "${index + 9}",
-                                            style: TextStyle(
-                                                fontSize: Get.width * 0.045),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    const SizedBox(
-                                      width: 10,
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black45,
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(10)),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              vertical: 8.0, horizontal: 16),
-                                          child: Text(
-                                            "${index + 13}",
-                                            style: TextStyle(
-                                                fontSize: Get.width * 0.045),
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ));
-                          }),
-                    ),
-                  ],
-                ),
-              )),
+              child: sidebarWidget ?? const SidebarWidget()),
         )
       ],
     ));
@@ -1022,5 +909,56 @@ class HomeController extends GetxController {
     player.next();
     await player.play();
     update();
+  }
+}
+
+class SidebarWidget extends StatelessWidget {
+  const SidebarWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 18.0, right: 18),
+      child: Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.only(left: 14.0, top: 10),
+            child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Chapters",
+                  style: TextStyle(fontSize: 20),
+                )),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Expanded(
+            child: ListView.builder(
+                shrinkWrap: false,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: 4,
+                itemBuilder: (BuildContext context, int index) {
+                  return Container(
+                    margin: const EdgeInsets.only(bottom: 10),
+                    decoration: const BoxDecoration(
+                      color: Colors.white10,
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Text(
+                        "Chapter $index",
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  );
+                }),
+          ),
+        ],
+      ),
+    );
   }
 }

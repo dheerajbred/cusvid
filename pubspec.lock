@@ -325,7 +325,7 @@ packages:
     description:
       path: media_kit_video
       ref: HEAD
-      resolved-ref: "321c8741d5c317806452eb70f3682147407fb5c5"
+      resolved-ref: "29a7fcda6bc48f1436c845391635abf53906f617"
       url: "https://github.com/aabirsark/media-kit-dheeraj.git"
     source: git
     version: "1.2.4"

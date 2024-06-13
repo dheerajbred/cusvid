@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:manual_video_player/controllers/home_controller.dart';
 import 'package:manual_video_player/models/media_inpput_value.dart';
 import 'package:manual_video_player/screens/home_screen.dart';
 import 'package:manual_video_player/screens/video_player.screen.page.dart';
@@ -66,7 +67,7 @@ class MyApp extends StatelessWidget {
                   label: "NEXT EPISODE",
                   enabled: true)
             ],
-            
+            sidebarWidget: SidebarWidget(),
             extraWidgetEnabled: true,
             extraWidget: Container(
               child: Text("HiEXtra"),
