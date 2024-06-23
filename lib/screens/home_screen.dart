@@ -203,9 +203,9 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
             fullscreen: MaterialVideoControlsThemeData(
-              seekBarMargin: const EdgeInsets.only(bottom: 50, right: 180),
+              seekBarMargin: const EdgeInsets.only(bottom: 50),
               seekBarThumbSize: 20,
-              bottomButtonBarMargin: const EdgeInsets.only(bottom: 20),
+              bottomButtonBarMargin: EdgeInsets.zero,
               automaticallyImplySkipNextButton: false,
               controlsHoverDuration:
                   const Duration(seconds: 5, milliseconds: 400),
@@ -213,16 +213,19 @@ class HomeScreen extends StatelessWidget {
               shiftSubtitlesOnControlsVisibilityChange: true,
               volumeGesture: true,
               displaySeekBar: true,
+              brightnessGesture: true,
+              seekGesture: true,
               seekOnDoubleTap: true,
               buttonBarButtonSize: 30.0,
+              speedUpOnLongPress: true,
               buttonBarButtonColor: Colors.white,
               topButtonBar: [
-                const MaterialFullscreenButton(
-                  icon: Icon(Icons.arrow_back),
-                  iconSize: 30.0,
+                const Text(
+                  "Happy Bunny - Episode 2 @2kbps",
+                  style: TextStyle(
+                    fontSize: 22,
+                  ),
                 ),
-                const SizedBox(height: 8),
-                const Text("Full"),
                 const Spacer(),
                 MaterialCustomButton(
                   onPressed: () {
@@ -275,90 +278,81 @@ class HomeScreen extends StatelessWidget {
                 ),
                 MaterialCustomButton(
                   onPressed: controller.qualitySelector2,
-                  icon: const ImageIcon(AssetImage("assets/setting.png")),
+                  icon: const Icon(Icons.more_vert),
                   iconSize: 30.0,
                   iconColor: Colors.white,
                 ),
               ],
               bottomButtonBar: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 30.0),
-                  child: MaterialPlayOrPauseButton(),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 35.0),
-                  child: StreamBuilder<Duration>(
-                    stream: controller.player.stream.position,
-                    builder: (context, position) {
-                      if (position.hasData && position.data != null) {
-                        a = position.data!.inSeconds;
-                      }
-                      // log("${controller.player.state.duration.inSeconds} ", name: "Duration");
-                      return Row(
-                        children: [
-                          MaterialCustomButton(
-                            onPressed: () {
-                              debugPrint(
-                                  "position is ${position.data?.inSeconds}");
-                              if (position.hasData && position.data != null) {
-                                controller.player.seek(Duration(
-                                    seconds: -((controller.player.state.duration
-                                                .inSeconds -
-                                            (position.data!.inSeconds - 10))
-                                        .abs())));
-                              } else {
-                                controller.player.seek(Duration(
-                                    seconds: -((controller.player.state.duration
-                                                .inSeconds -
-                                            (a - 10))
-                                        .abs())));
-                                a = min(a - 10, 0);
-                              }
-                            },
-                            icon: const Icon(Icons.replay_10_outlined),
-                            iconSize: 30.0,
-                          ),
-                          MaterialCustomButton(
-                            onPressed: () {
-                              if (position.hasData && position.data != null) {
-                                controller.player.seek(Duration(
-                                    seconds: -((controller.player.state.duration
-                                                .inSeconds -
-                                            (position.data!.inSeconds + 10))
-                                        .abs())));
-                              } else {
-                                controller.player.seek(Duration(
-                                    seconds: -((controller.player.state.duration
-                                                .inSeconds -
-                                            (a + 10))
-                                        .abs())));
-                                a += 10;
-                              }
-                            },
-                            icon: const Icon(Icons.forward_10_outlined),
-                            iconSize: 30.0,
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 29.0),
-                  child: MaterialDesktopVolumeButton(
-                    volumeHighIcon: Icon(Icons.volume_up_rounded),
-                    volumeLowIcon: Icon(Icons.volume_down_rounded),
-                  ),
-                ),
-                const Spacer(),
-                const Padding(
-                  padding: EdgeInsets.only(bottom: 4),
-                  child: MaterialPositionIndicator(
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-                const SizedBox(width: 5),
-                const MaterialFullscreenButton(iconSize: 24),
+                Spacer(),
+                const MaterialFullscreenButton()
+                // Padding(
+                //   padding: const EdgeInsets.only(top: 35.0),
+                //   child: StreamBuilder<Duration>(
+                //     stream: controller.player.stream.position,
+                //     builder: (context, position) {
+                //       if (position.hasData && position.data != null) {
+                //         a = position.data!.inSeconds;
+                //       }
+                //       // log("${controller.player.state.duration.inSeconds} ", name: "Duration");
+                //       return Row(
+                //         children: [
+                //           MaterialCustomButton(
+                //             onPressed: () {
+                //               debugPrint(
+                //                   "position is ${position.data?.inSeconds}");
+                //               if (position.hasData && position.data != null) {
+                //                 controller.player.seek(Duration(
+                //                     seconds: -((controller.player.state.duration
+                //                                 .inSeconds -
+                //                             (position.data!.inSeconds - 10))
+                //                         .abs())));
+                //               } else {
+                //                 controller.player.seek(Duration(
+                //                     seconds: -((controller.player.state.duration
+                //                                 .inSeconds -
+                //                             (a - 10))
+                //                         .abs())));
+                //                 a = min(a - 10, 0);
+                //               }
+                //             },
+                //             icon: const Icon(Icons.replay_10_outlined),
+                //             iconSize: 30.0,
+                //           ),
+                //           MaterialCustomButton(
+                //             onPressed: () {
+                //               if (position.hasData && position.data != null) {
+                //                 controller.player.seek(Duration(
+                //                     seconds: -((controller.player.state.duration
+                //                                 .inSeconds -
+                //                             (position.data!.inSeconds + 10))
+                //                         .abs())));
+                //               } else {
+                //                 controller.player.seek(Duration(
+                //                     seconds: -((controller.player.state.duration
+                //                                 .inSeconds -
+                //                             (a + 10))
+                //                         .abs())));
+                //                 a += 10;
+                //               }
+                //             },
+                //             icon: const Icon(Icons.forward_10_outlined),
+                //             iconSize: 30.0,
+                //           ),
+                //         ],
+                //       );
+                //     },
+                //   ),
+                // ),
+                // const Spacer(),
+                // const Padding(
+                //   padding: EdgeInsets.only(bottom: 4),
+                //   child: MaterialPositionIndicator(
+                //     style: TextStyle(color: Colors.white),
+                //   ),
+                // ),
+                // const SizedBox(width: 5),
+                // const MaterialFullscreenButton(iconSize: 24),
               ],
             ),
             child: SingleChildScrollView(
