@@ -103,6 +103,7 @@ class _VideoPlayerFullscreenState extends State<VideoPlayerFullscreen>
           nextButton: widget.mediaInput?.nextButtons
                   .map((e) => MediaKitNextButton(
                       duration: e.duration,
+                      callback: e.callback,
                       activateTimeLeft: e.activateTimeLeft,
                       label: e.label,
                       enabled: e.enabled))
